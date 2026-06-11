@@ -125,7 +125,7 @@ export default function AudioInfoPage() {
 
           <button
             onClick={handleReset}
-            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-white/10 hover:bg-white/20 border border-white/20 transition-all"
+            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-black/5 hover:bg-black/8 dark:bg-white/10 dark:hover:bg-white/20 border border-white/20 transition-all"
           >
             Inspect another file
           </button>

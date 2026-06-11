@@ -19,7 +19,7 @@ export function BottomNav() {
       aria-label="Bottom navigation"
       className="fixed bottom-0 inset-x-0 z-50 md:hidden safe-area-bottom"
     >
-      <div className="bg-white/15 backdrop-blur-xl border-t border-white/20 shadow-[0_-1px_0_rgba(255,255,255,0.3)]">
+      <div className="bg-white/80 dark:bg-white/15 backdrop-blur-xl border-t border-black/8 dark:border-white/20 shadow-[0_-1px_0_rgba(0,0,0,0.06)] dark:shadow-[0_-1px_0_rgba(255,255,255,0.15)]">
         <ul className="flex items-center h-16">
           {tabs.map(({ href, label, icon: Icon }) => {
             const isActive = href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/')

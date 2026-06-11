@@ -51,7 +51,7 @@ export default function ReverbAdderPage() {
             <p className="text-sm font-medium mb-2 text-[#1A1208] dark:text-[#FFF8ED]">Preset</p>
             <div className="flex flex-wrap gap-2">
               {PRESETS.map(({ id, label }) => (
-                <button key={id} onClick={() => setPreset(id)} className={cn('px-4 py-1.5 rounded-xl text-sm font-medium border transition-all', preset === id ? 'text-white border-transparent' : 'bg-white/5 border-white/15')} style={preset === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
+                <button key={id} onClick={() => setPreset(id)} className={cn('px-4 py-1.5 rounded-xl text-sm font-medium border transition-all', preset === id ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15')} style={preset === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
                   {label}
                 </button>
               ))}

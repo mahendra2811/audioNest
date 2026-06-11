@@ -16,9 +16,9 @@ interface GlassPanelProps {
 }
 
 const intensityStyles: Record<GlassIntensity, string> = {
-  heavy: 'bg-white/15 backdrop-blur-xl',
-  medium: 'bg-white/10 backdrop-blur-lg',
-  light: 'bg-white/5 backdrop-blur-md',
+  heavy: 'bg-white/75 dark:bg-white/15 backdrop-blur-xl',
+  medium: 'bg-white/55 dark:bg-white/10 backdrop-blur-lg',
+  light: 'bg-white/35 dark:bg-white/5 backdrop-blur-md',
 }
 
 export function GlassPanel({
@@ -86,12 +86,13 @@ export function GlassPanel({
       className={cn(
         'relative rounded-3xl overflow-hidden',
         intensityStyles[intensity],
-        // Specular edge: bright top-left, fades bottom-right
-        'shadow-[inset_1px_1px_0_rgba(255,255,255,0.8),inset_0_0_0_1px_rgba(255,255,255,0.2)]',
+        // Specular edge — light mode: subtle dark border; dark mode: bright white rim
+        'shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),0_0_0_1px_rgba(0,0,0,0.06),0_8px_32px_rgba(255,140,0,0.10)]',
+        'dark:shadow-[inset_1px_1px_0_rgba(255,255,255,0.8),inset_0_0_0_1px_rgba(255,255,255,0.2),0_8px_32px_rgba(255,140,0,0.15)]',
         // Warm orange-cast drop shadow
-        'drop-shadow-[0_20px_60px_rgba(255,140,0,0.12)]',
+        'drop-shadow-[0_20px_60px_rgba(255,140,0,0.10)]',
         // Hover lift
-        interactive && 'cursor-pointer transition-shadow duration-300 hover:shadow-[inset_1px_1px_0_rgba(255,255,255,0.95),inset_0_0_0_1px_rgba(255,255,255,0.35),0_24px_70px_rgba(255,140,0,0.2)]',
+        interactive && 'cursor-pointer transition-shadow duration-300',
         className
       )}
       {...tiltProps}

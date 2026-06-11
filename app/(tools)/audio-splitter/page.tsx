@@ -54,7 +54,7 @@ export default function AudioSplitterPage() {
           <p className="font-medium text-[#1A1208] dark:text-[#FFF8ED]">{file.name}</p>
           <div className="flex gap-3">
             {(['parts', 'duration'] as const).map((m) => (
-              <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${mode === m ? 'text-white border-transparent' : 'bg-white/5 border-white/15'}`} style={mode === m ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
+              <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${mode === m ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15'}`} style={mode === m ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
                 {m === 'parts' ? 'Equal parts' : 'Every N seconds'}
               </button>
             ))}

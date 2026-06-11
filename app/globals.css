@@ -62,23 +62,32 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Glass utilities */
+/* Glass utilities — light mode uses higher opacity; dark mode stays translucent */
 .glass-heavy {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
+.dark .glass-heavy {
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .glass-medium {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+.dark .glass-medium {
+  background: rgba(255, 255, 255, 0.10);
+}
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+.dark .glass-light {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Specular edge - top-left bright, bottom-right fades */

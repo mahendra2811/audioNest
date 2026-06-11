@@ -21,9 +21,9 @@ export function GlassCard({
   onClick,
 }: GlassCardProps) {
   const bgByIntensity: Record<GlassIntensity, string> = {
-    heavy: 'bg-white/15 backdrop-blur-xl',
-    medium: 'bg-white/10 backdrop-blur-lg',
-    light: 'bg-white/5 backdrop-blur-md',
+    heavy: 'bg-white/75 dark:bg-white/15 backdrop-blur-xl',
+    medium: 'bg-white/55 dark:bg-white/10 backdrop-blur-lg',
+    light: 'bg-white/35 dark:bg-white/5 backdrop-blur-md',
   }
 
   return (
@@ -34,8 +34,10 @@ export function GlassCard({
       className={cn(
         'relative rounded-2xl overflow-hidden',
         bgByIntensity[intensity],
-        'shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_0_0_0_1px_rgba(255,255,255,0.15)]',
-        featured && 'shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),inset_0_0_0_1px_rgba(255,255,255,0.3),0_16px_48px_rgba(255,140,0,0.18)]',
+        // Light mode: subtle dark border + warm shadow; dark mode: white specular rim
+        'shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),0_0_0_1px_rgba(0,0,0,0.07),0_4px_16px_rgba(255,140,0,0.08)]',
+        'dark:shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_0_0_0_1px_rgba(255,255,255,0.15)]',
+        featured && 'dark:shadow-[inset_1px_1px_0_rgba(255,255,255,0.9),inset_0_0_0_1px_rgba(255,255,255,0.3),0_16px_48px_rgba(255,140,0,0.18)]',
         interactive && 'cursor-pointer',
         className
       )}

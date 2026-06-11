@@ -97,10 +97,10 @@ export default function TermsPage() {
         <p className="leading-relaxed text-gray-700">
           Questions about these terms? Email us at{" "}
           <a
-            href="mailto:hello@audionest.app"
+            href="mailto:mahendrapuniya92@gmail.com"
             className="text-blue-600 underline hover:text-blue-800"
           >
-            hello@audionest.app
+            mahendrapuniya92@gmail.com
           </a>
           .
         </p>

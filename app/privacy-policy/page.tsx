@@ -107,10 +107,10 @@ export default function PrivacyPolicyPage() {
           <p>
             Questions about this policy or about how AudioNest handles data? Email us at{' '}
             <a
-              href="mailto:hello@audionest.app"
+              href="mailto:mahendrapuniya92@gmail.com"
               className="underline underline-offset-2 hover:text-primary"
             >
-              hello@audionest.app
+              mahendrapuniya92@gmail.com
             </a>
             .
           </p>

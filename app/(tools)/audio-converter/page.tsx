@@ -135,7 +135,7 @@ export default function AudioConverterPage() {
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400',
                     targetFormat === id
                       ? 'text-white border-transparent'
-                      : 'bg-white/5 border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
+                      : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
                   )}
                   style={targetFormat === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
                 >
@@ -169,7 +169,7 @@ export default function AudioConverterPage() {
                       'px-3 py-1 rounded-lg text-sm border transition-all',
                       bitrate === b
                         ? 'text-white border-transparent'
-                        : 'bg-white/5 border-white/15 text-[#7A6A50] dark:text-[#B8A77F] hover:bg-white/10'
+                        : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#7A6A50] dark:text-[#B8A77F] hover:bg-white/10'
                     )}
                     style={bitrate === b ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
                   >
@@ -190,7 +190,7 @@ export default function AudioConverterPage() {
             </button>
             <button
               onClick={handleReset}
-              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
             >
               Change file
             </button>
@@ -214,7 +214,7 @@ export default function AudioConverterPage() {
           <ResultPanel result={result} originalSize={file?.size} />
           <button
             onClick={handleReset}
-            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
           >
             Convert another file
           </button>

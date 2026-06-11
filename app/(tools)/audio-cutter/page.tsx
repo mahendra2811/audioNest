@@ -200,7 +200,7 @@ export default function AudioCutterPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
                   value
                     ? 'text-white border-transparent'
-                    : 'bg-white/5 border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
+                    : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
                 }`}
                 style={value ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
               >
@@ -219,7 +219,7 @@ export default function AudioCutterPage() {
             </button>
             <button
               onClick={handleReset}
-              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
             >
               Change file
             </button>
@@ -239,7 +239,7 @@ export default function AudioCutterPage() {
           <ResultPanel result={result} originalSize={file?.size} />
           <button
             onClick={handleReset}
-            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
           >
             Cut another file
           </button>

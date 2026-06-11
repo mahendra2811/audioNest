@@ -50,7 +50,7 @@ export default function AudioNormalizerPage() {
           <p className="text-sm text-[#1A1208] dark:text-[#FFF8ED]">{file.name}</p>
           <div className="flex gap-3 flex-wrap">
             {PRESETS.map(({ id, label, lufs }) => (
-              <button key={id} onClick={() => setPreset(id)} className={cn('px-4 py-2 rounded-xl text-sm font-medium border transition-all text-left', preset === id ? 'text-white border-transparent' : 'bg-white/5 border-white/15')}>
+              <button key={id} onClick={() => setPreset(id)} className={cn('px-4 py-2 rounded-xl text-sm font-medium border transition-all text-left', preset === id ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15')}>
                 <span style={preset === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}}>
                   {label}
                 </span>

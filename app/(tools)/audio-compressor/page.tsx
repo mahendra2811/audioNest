@@ -49,7 +49,7 @@ export default function AudioCompressorPage() {
             <p className="text-sm font-medium mb-2 text-[#1A1208] dark:text-[#FFF8ED]">Target bitrate</p>
             <div className="flex gap-2">
               {BITRATES.map(b => (
-                <button key={b} onClick={() => setBitrate(b)} className={cn('px-4 py-2 rounded-xl text-sm font-medium border transition-all', bitrate === b ? 'text-white border-transparent' : 'bg-white/5 border-white/15')} style={bitrate === b ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
+                <button key={b} onClick={() => setBitrate(b)} className={cn('px-4 py-2 rounded-xl text-sm font-medium border transition-all', bitrate === b ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15')} style={bitrate === b ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
                   {b} kbps
                 </button>
               ))}

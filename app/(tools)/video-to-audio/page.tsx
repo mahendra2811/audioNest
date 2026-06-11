@@ -45,7 +45,7 @@ export default function VideoToAudioPage() {
           <GlassCard intensity="light" className="px-4 py-3"><p className="text-sm text-[#1A1208] dark:text-[#FFF8ED] truncate">{file.name}</p></GlassCard>
           <div className="flex gap-2">
             {FORMATS.map(({ id, label }) => (
-              <button key={id} onClick={() => setFormat(id)} className={cn('px-4 py-1.5 rounded-xl text-sm font-medium border transition-all', format === id ? 'text-white border-transparent' : 'bg-white/5 border-white/15')} style={format === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
+              <button key={id} onClick={() => setFormat(id)} className={cn('px-4 py-1.5 rounded-xl text-sm font-medium border transition-all', format === id ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15')} style={format === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
                 {label}
               </button>
             ))}
