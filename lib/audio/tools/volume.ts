@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
 import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 interface VolumeOptions {
   gainDb: number // -20 to +20
@@ -13,10 +13,12 @@ export async function runVolume(
   signal?: AbortSignal
 ): Promise<ToolResult> {
   const { gainDb = 0 } = opts
-  const gainLinear = Math.pow(10, gainDb / 20)
+  const gainLinear = 10 ** (gainDb / 20)
 
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.4, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.4, step: 'decoding' })
+  )
   if (signal?.aborted) throw new Error('ABORTED')
 
   const offline = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate)
@@ -49,5 +51,12 @@ export async function runVolume(
   )
   const sign = gainDb >= 0 ? '+' : ''
   const outName = file.name.replace(/.[^.]+$/, `-${sign}${gainDb}dB.mp3`)
-  return { blob, name: outName, size: blob.size, duration: rendered.duration, mimeType: 'audio/mpeg', format: 'MP3' }
+  return {
+    blob,
+    name: outName,
+    size: blob.size,
+    duration: rendered.duration,
+    mimeType: 'audio/mpeg',
+    format: 'MP3',
+  }
 }

@@ -26,7 +26,8 @@ export async function readID3(file: File): Promise<ID3ReadResult> {
   if (c.year) tags.year = String(c.year)
   if (c.genre?.length) tags.genre = c.genre[0]
   if (c.track.no) tags.track = String(c.track.no)
-  if (c.comment?.length) tags.comment = (c.comment[0] as { text?: string }).text || String(c.comment[0])
+  if (c.comment?.length)
+    tags.comment = (c.comment[0] as { text?: string }).text || String(c.comment[0])
   if (c.picture?.length) {
     const pic = c.picture[0]
     const blob = new Blob([pic.data.buffer as ArrayBuffer], { type: pic.format })
@@ -44,10 +45,11 @@ export async function writeID3(file: File, tags: ID3Tags, onProgress: OnProgress
   if (tags.title) writer.setFrame('TIT2', tags.title)
   if (tags.artist) writer.setFrame('TPE1', [tags.artist])
   if (tags.album) writer.setFrame('TALB', tags.album)
-  if (tags.year) writer.setFrame('TYER', parseInt(tags.year))
+  if (tags.year) writer.setFrame('TYER', parseInt(tags.year, 10))
   if (tags.genre) writer.setFrame('TCON', [tags.genre])
   if (tags.track) writer.setFrame('TRCK', tags.track)
-  if (tags.comment) writer.setFrame('COMM', { description: '', text: tags.comment, language: 'eng' })
+  if (tags.comment)
+    writer.setFrame('COMM', { description: '', text: tags.comment, language: 'eng' })
 
   if (tags.coverArt) {
     const coverBuffer = await tags.coverArt.arrayBuffer()

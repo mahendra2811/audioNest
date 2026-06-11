@@ -1,22 +1,25 @@
 'use client'
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { FileMeta } from '@/components/tool/FileMeta'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { GlassCard } from '@/components/glass/GlassCard'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { AudioMeta, Progress, ToolResult, ToolError } from '@/lib/audio/types'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Slider } from '@/components/ui/Slider'
+import { Toggle } from '@/components/ui/Toggle'
+import type { AudioMeta, Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { toast } from 'sonner'
 import { formatDuration } from '@/lib/utils'
 
 const tool = getToolBySlug('audio-cutter')!
 
 const ACCEPT = Object.fromEntries(
-  AUDIO_ACCEPTS.filter(a => a.startsWith('audio/')).map(m => [m, []])
+  AUDIO_ACCEPTS.filter((a) => a.startsWith('audio/')).map((m) => [m, []])
 )
 
 export default function AudioCutterPage() {
@@ -38,8 +41,6 @@ export default function AudioCutterPage() {
     setFile(f)
     setResult(null)
     setError(null)
-
-    // Get duration
     try {
       const url = URL.createObjectURL(f)
       const audio = new Audio(url)
@@ -63,7 +64,6 @@ export default function AudioCutterPage() {
         numberOfChannels: 2,
       })
     } catch {
-      // fallback: use file size estimate
       setDuration(0)
     }
   }, [])
@@ -81,13 +81,7 @@ export default function AudioCutterPage() {
       const { runCut } = await import('@/lib/audio/tools/cut')
       const res = await runCut(
         file,
-        {
-          startTime,
-          endTime,
-          fadeIn: fadeIn ? 0.5 : 0,
-          fadeOut: fadeOut ? 0.5 : 0,
-          format: 'mp3',
-        },
+        { startTime, endTime, fadeIn: fadeIn ? 0.5 : 0, fadeOut: fadeOut ? 0.5 : 0, format: 'mp3' },
         (p) => setProgress(p),
         ctrl.signal
       )
@@ -127,122 +121,71 @@ export default function AudioCutterPage() {
   return (
     <ToolShell
       tool={tool}
-      description="AudioNest cuts your audio file entirely on your device using the Web Audio API. Set start and end points using the sliders, optionally add fade in/out for smooth transitions, then click Cut. The result is encoded to MP3 with ffmpeg.wasm — nothing is uploaded."
+      description="AudioNest cuts your audio file entirely on your device using the Web Audio API. Set start and end points, optionally add fade in/out for smooth transitions, then click Cut. The result is encoded to MP3 with ffmpeg.wasm — nothing is uploaded."
     >
-      {!file && (
-        <Dropzone
-          onFile={handleFile}
-          accept={ACCEPT}
-          label="Drop an audio file to cut"
-        />
-      )}
+      {!file && <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop an audio file to cut" />}
 
       {file && !progress && (
         <div className="flex flex-col gap-5">
           {meta && <FileMeta meta={meta} />}
 
-          {/* Start / End sliders */}
           {duration > 0 && (
-            <GlassCard intensity="light" className="p-5 flex flex-col gap-4">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-sm font-medium text-[#1A1208] dark:text-[#FFF8ED]">Start</label>
-                  <span className="font-mono text-sm text-[#7A6A50] dark:text-[#B8A77F]">
-                    {formatDuration(startTime)}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={endTime - 0.1}
-                  step={0.01}
-                  value={startTime}
-                  onChange={(e) => setStartTime(parseFloat(e.target.value))}
-                  className="w-full accent-orange-500"
-                  aria-label="Start time"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-sm font-medium text-[#1A1208] dark:text-[#FFF8ED]">End</label>
-                  <span className="font-mono text-sm text-[#7A6A50] dark:text-[#B8A77F]">
-                    {formatDuration(endTime)}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={startTime + 0.1}
-                  max={duration}
-                  step={0.01}
-                  value={endTime}
-                  onChange={(e) => setEndTime(parseFloat(e.target.value))}
-                  className="w-full accent-orange-500"
-                  aria-label="End time"
-                />
-              </div>
-
-              <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F] font-mono text-center">
+            <Card inset className="flex flex-col gap-4 p-5">
+              <Slider
+                label="Start"
+                value={startTime}
+                min={0}
+                max={Math.max(0.1, endTime - 0.1)}
+                step={0.01}
+                onChange={setStartTime}
+                format={formatDuration}
+              />
+              <Slider
+                label="End"
+                value={endTime}
+                min={startTime + 0.1}
+                max={duration}
+                step={0.01}
+                onChange={setEndTime}
+                format={formatDuration}
+              />
+              <p className="text-center font-mono text-xs text-muted">
                 Selection: {formatDuration(cutDuration)} of {formatDuration(duration)}
               </p>
-            </GlassCard>
+            </Card>
           )}
 
-          {/* Fade toggles */}
-          <div className="flex gap-3 flex-wrap">
-            {[
-              { label: 'Fade In', value: fadeIn, set: setFadeIn },
-              { label: 'Fade Out', value: fadeOut, set: setFadeOut },
-            ].map(({ label, value, set }) => (
-              <button
-                key={label}
-                onClick={() => set(!value)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
-                  value
-                    ? 'text-white border-transparent'
-                    : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
-                }`}
-                style={value ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-3">
+            <Toggle pressed={fadeIn} onPressedChange={setFadeIn}>
+              Fade In
+            </Toggle>
+            <Toggle pressed={fadeOut} onPressedChange={setFadeOut}>
+              Fade Out
+            </Toggle>
           </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={handleCut}
-              className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
-              style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}
-            >
-              Cut
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
-            >
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={handleCut}>Cut</Button>
+            <Button variant="secondary" onClick={handleReset}>
               Change file
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {progress && (
-        <div className="flex flex-col items-center py-10 gap-6">
+        <div className="flex flex-col items-center gap-6 py-10">
           <ProgressRing percent={progress.percent} step={progress.step} onCancel={handleCancel} />
-          <p className="text-sm text-[#7A6A50] dark:text-[#B8A77F]">Cutting audio…</p>
+          <p className="text-sm text-muted">Cutting audio…</p>
         </div>
       )}
 
       {result && !progress && (
         <div className="flex flex-col gap-4">
           <ResultPanel result={result} originalSize={file?.size} />
-          <button
-            onClick={handleReset}
-            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
-          >
+          <Button variant="secondary" size="sm" className="self-start" onClick={handleReset}>
             Cut another file
-          </button>
+          </Button>
         </div>
       )}
 

@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { decodeFile, audioBufferToWav } from '../decode'
+import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 interface CutOptions {
   startTime: number
@@ -17,7 +17,9 @@ export async function runCut(
   signal?: AbortSignal
 ): Promise<ToolResult> {
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.4, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.4, step: 'decoding' })
+  )
 
   if (signal?.aborted) throw new Error('ABORTED')
 

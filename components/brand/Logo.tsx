@@ -17,12 +17,12 @@ export function Logo({ size = 48, ...props }: LogoProps) {
       {...props}
     >
       <defs>
-        <linearGradient id="anGold" x1="3" y1="3" x2="45" y2="45" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FF8C00" />
-          <stop offset="1" stopColor="#FFD700" />
+        <linearGradient id="anGrad" x1="3" y1="3" x2="45" y2="45" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#6366F1" />
+          <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
       </defs>
-      <rect x="3" y="3" width="42" height="42" rx="13" fill="url(#anGold)" />
+      <rect x="3" y="3" width="42" height="42" rx="13" fill="url(#anGrad)" />
       <g fill="#fff">
         <rect x="13" y="21" width="3.2" height="6" rx="1.6" />
         <rect x="18.4" y="17" width="3.2" height="14" rx="1.6" />

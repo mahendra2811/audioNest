@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { getFFmpeg } from '../ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
+import { getFFmpeg } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 type LoudnessTarget = 'streaming' | 'podcast' | 'broadcast' | 'peak'
 const LUFS: Record<LoudnessTarget, number> = {
@@ -30,9 +30,14 @@ export async function runNormalize(
   await ffmpeg.writeFile(`input.${inputExt}`, await fetchFile(file))
 
   await ffmpeg.exec([
-    '-i', `input.${inputExt}`,
-    '-af', `loudnorm=I=${targetLUFS}:TP=-1.5:LRA=11`,
-    '-c:a', 'libmp3lame', '-b:a', '192k',
+    '-i',
+    `input.${inputExt}`,
+    '-af',
+    `loudnorm=I=${targetLUFS}:TP=-1.5:LRA=11`,
+    '-c:a',
+    'libmp3lame',
+    '-b:a',
+    '192k',
     'output.mp3',
   ])
 

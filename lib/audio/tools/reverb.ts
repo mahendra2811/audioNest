@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
 import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 export type ReverbPreset = 'room' | 'hall' | 'church' | 'cave' | 'studio' | 'plate'
 
@@ -21,7 +21,12 @@ const IR_PATHS: Record<ReverbPreset, string> = {
 
 function syntheticIR(preset: ReverbPreset, sampleRate: number): AudioBuffer {
   const decayTimes: Record<ReverbPreset, number> = {
-    room: 0.8, hall: 2.5, church: 4.0, cave: 3.0, studio: 0.4, plate: 1.5,
+    room: 0.8,
+    hall: 2.5,
+    church: 4.0,
+    cave: 3.0,
+    studio: 0.4,
+    plate: 1.5,
   }
   const decay = decayTimes[preset]
   const length = Math.ceil(sampleRate * decay)
@@ -67,7 +72,11 @@ export async function runReverb(
 
   // Pad length to accommodate reverb tail
   const totalLength = inputBuf.length + irBuf.length
-  const offline = new OfflineAudioContext(inputBuf.numberOfChannels, totalLength, inputBuf.sampleRate)
+  const offline = new OfflineAudioContext(
+    inputBuf.numberOfChannels,
+    totalLength,
+    inputBuf.sampleRate
+  )
 
   const src = offline.createBufferSource()
   src.buffer = inputBuf
@@ -95,5 +104,12 @@ export async function runReverb(
   const blob = await encodeAudioBuffer(rendered, 'mp3', (p) =>
     onProgress({ percent: 70 + p.percent * 0.3, step: 'encoding' })
   )
-  return { blob, name: file.name.replace(/.[^.]+$/, `-${preset}-reverb.mp3`), size: blob.size, duration: rendered.duration, mimeType: 'audio/mpeg', format: 'MP3' }
+  return {
+    blob,
+    name: file.name.replace(/.[^.]+$/, `-${preset}-reverb.mp3`),
+    size: blob.size,
+    duration: rendered.duration,
+    mimeType: 'audio/mpeg',
+    format: 'MP3',
+  }
 }

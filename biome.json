@@ -1,12 +1,33 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
-  "organizeImports": { "enabled": true },
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": ["app/**", "components/**", "lib/**", "tests/**", "*.ts", "*.tsx", "!**/*.css"]
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "suspicious": { "noExplicitAny": "warn" },
-      "style": { "noUnusedTemplateLiteral": "warn" }
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noApproximativeNumericConstant": "off",
+        "noArrayIndexKey": "warn"
+      },
+      "style": {
+        "noUnusedTemplateLiteral": "warn",
+        "noNonNullAssertion": "off"
+      },
+      "a11y": {
+        "useMediaCaption": "off",
+        "useSemanticElements": "off",
+        "useFocusableInteractive": "warn",
+        "useKeyWithClickEvents": "warn",
+        "useAriaPropsSupportedByRole": "warn",
+        "noLabelWithoutControl": "warn",
+        "noSvgWithoutTitle": "warn",
+        "noAriaHiddenOnFocusable": "warn"
+      }
     }
   },
   "formatter": {
@@ -18,7 +39,8 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingCommas": "es5"
+      "trailingCommas": "es5",
+      "semicolons": "asNeeded"
     }
   }
 }

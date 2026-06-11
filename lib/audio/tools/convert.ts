@@ -1,5 +1,5 @@
-import type { OnProgress, ToolResult } from '../types'
 import { ffmpegExec } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 type ConvertFormat = 'mp3' | 'wav' | 'flac' | 'ogg' | 'aac' | 'm4a' | 'opus'
 

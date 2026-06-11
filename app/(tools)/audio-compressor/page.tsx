@@ -1,19 +1,20 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { ToolResult, ToolError, Progress } from '@/lib/audio/types'
+import type { Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { formatBytes } from '@/lib/utils'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+import { cn, formatBytes } from '@/lib/utils'
 
 const tool = getToolBySlug('audio-compressor')!
-const ACCEPT = Object.fromEntries(AUDIO_ACCEPTS.filter(a => a.startsWith('audio/')).map(m => [m, []]))
+const ACCEPT = Object.fromEntries(
+  AUDIO_ACCEPTS.filter((a) => a.startsWith('audio/')).map((m) => [m, []])
+)
 const BITRATES = [32, 64, 96, 128]
 
 export default function AudioCompressorPage() {
@@ -29,37 +30,79 @@ export default function AudioCompressorPage() {
 
   const handleRun = async () => {
     if (!file) return
-    setProgress({ percent: 0, step: 'processing' }); setResult(null); setError(null)
+    setProgress({ percent: 0, step: 'processing' })
+    setResult(null)
+    setError(null)
     startProcessing()
     try {
       const { runCompress } = await import('@/lib/audio/tools/compress')
       const res = await runCompress(file, { bitrate }, (p) => setProgress(p))
-      setResult(res); toast.success('Compressed!')
-    } catch { setError('PROCESS_FAILED') }
-    finally { setProgress(null); endProcessing() }
+      setResult(res)
+      toast.success('Compressed!')
+    } catch {
+      setError('PROCESS_FAILED')
+    } finally {
+      setProgress(null)
+      endProcessing()
+    }
   }
 
   return (
-    <ToolShell tool={tool} description="Re-encodes your audio at a lower bitrate using ffmpeg.wasm on-device to reduce file size.">
+    <ToolShell
+      tool={tool}
+      description="Re-encodes your audio at a lower bitrate using ffmpeg.wasm on-device to reduce file size."
+    >
       {!file && <Dropzone onFile={setFile} accept={ACCEPT} label="Drop audio to compress" />}
       {file && !progress && !result && (
         <div className="flex flex-col gap-5">
-          <p className="text-sm text-[#1A1208] dark:text-[#FFF8ED]">{file.name} · {formatBytes(file.size)}</p>
+          <p className="text-sm text-[var(--fg)] dark:text-[var(--fg)]">
+            {file.name} · {formatBytes(file.size)}
+          </p>
           <div>
-            <p className="text-sm font-medium mb-2 text-[#1A1208] dark:text-[#FFF8ED]">Target bitrate</p>
+            <p className="text-sm font-medium mb-2 text-[var(--fg)] dark:text-[var(--fg)]">
+              Target bitrate
+            </p>
             <div className="flex gap-2">
-              {BITRATES.map(b => (
-                <button key={b} onClick={() => setBitrate(b)} className={cn('px-4 py-2 rounded-xl text-sm font-medium border transition-all', bitrate === b ? 'text-white border-transparent' : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15')} style={bitrate === b ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}>
+              {BITRATES.map((b) => (
+                <button
+                  type="button"
+                  key={b}
+                  onClick={() => setBitrate(b)}
+                  className={cn(
+                    'px-4 py-2 rounded-xl text-sm font-medium border transition-all',
+                    bitrate === b
+                      ? 'text-white border-transparent'
+                      : 'border border-line bg-surface-2 text-fg'
+                  )}
+                  style={
+                    bitrate === b ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' } : {}
+                  }
+                >
                   {b} kbps
                 </button>
               ))}
             </div>
           </div>
-          {estSize > 0 && <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F]">Estimated output: ~{formatBytes(estSize)}</p>}
-          <button onClick={handleRun} className="px-6 py-2.5 rounded-xl font-medium text-sm text-white" style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}>Compress</button>
+          {estSize > 0 && (
+            <p className="text-xs text-[var(--muted)] dark:text-[var(--muted)]">
+              Estimated output: ~{formatBytes(estSize)}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={handleRun}
+            className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+          >
+            Compress
+          </button>
         </div>
       )}
-      {progress && <div className="flex justify-center py-10"><ProgressRing percent={progress.percent} step={progress.step} /></div>}
+      {progress && (
+        <div className="flex justify-center py-10">
+          <ProgressRing percent={progress.percent} step={progress.step} />
+        </div>
+      )}
       {result && !progress && <ResultPanel result={result} originalSize={file?.size} />}
       {error && <ErrorCard error={error} onRetry={() => setError(null)} />}
     </ToolShell>

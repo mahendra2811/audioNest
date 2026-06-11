@@ -1,7 +1,7 @@
-import type { OnProgress, MultiToolResult } from '../types'
-import { getFFmpeg } from '../ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
 import JSZip from 'jszip'
+import { getFFmpeg } from '../ffmpeg'
+import type { OnProgress } from '../types'
 
 interface SplitOptions {
   mode: 'parts' | 'duration'
@@ -26,20 +26,24 @@ export async function runSplit(
   onProgress({ percent: 20, step: 'processing' })
 
   // Get duration
-  let duration = 0
-  await ffmpeg.exec(['-i', `input.${inputExt}`, '-f', 'null', '-'])
-    .catch(() => {}) // FFmpeg logs duration to stderr; we use it below
+  const duration = 0
+  await ffmpeg.exec(['-i', `input.${inputExt}`, '-f', 'null', '-']).catch(() => {}) // FFmpeg logs duration to stderr; we use it below
 
-  const segTime = mode === 'parts'
-    ? (duration || 120) / parts
-    : segmentDuration
+  const segTime = mode === 'parts' ? (duration || 120) / parts : segmentDuration
 
   await ffmpeg.exec([
-    '-i', `input.${inputExt}`,
-    '-f', 'segment',
-    '-segment_time', String(segTime),
-    '-reset_timestamps', '1',
-    '-c:a', 'libmp3lame', '-b:a', '192k',
+    '-i',
+    `input.${inputExt}`,
+    '-f',
+    'segment',
+    '-segment_time',
+    String(segTime),
+    '-reset_timestamps',
+    '1',
+    '-c:a',
+    'libmp3lame',
+    '-b:a',
+    '192k',
     'segment%03d.mp3',
   ])
 

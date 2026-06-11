@@ -15,14 +15,13 @@ export function WaveformView({
   file,
   src,
   onReady,
-  onRegionChange,
   className,
   interactive = false,
 }: WaveformViewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<import('wavesurfer.js').default | null>(null)
   const [ready, setReady] = useState(false)
-  const [regionStart, setRegionStart] = useState(0)
+  const [regionStart, _setRegionStart] = useState(0)
   const [regionEnd, setRegionEnd] = useState(1)
 
   useEffect(() => {
@@ -34,9 +33,9 @@ export function WaveformView({
       const WaveSurfer = (await import('wavesurfer.js')).default
       ws = WaveSurfer.create({
         container: containerRef.current!,
-        waveColor: 'rgba(255,140,0,0.5)',
-        progressColor: '#FF8C00',
-        cursorColor: '#FFD700',
+        waveColor: 'rgba(99,102,241,0.45)',
+        progressColor: '#6366f1',
+        cursorColor: '#8b5cf6',
         height: 80,
         barWidth: 2,
         barGap: 1,
@@ -66,17 +65,26 @@ export function WaveformView({
   }, [file, src, interactive, onReady])
 
   return (
-    <div className={cn('relative rounded-2xl overflow-hidden bg-white/5 p-3', className)}>
+    <div
+      className={cn(
+        'relative overflow-hidden rounded-2xl border border-line bg-surface-2 p-3',
+        className
+      )}
+    >
       <div ref={containerRef} />
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-6 h-6 rounded-full border-2 border-orange-400 border-t-transparent animate-spin" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
       )}
       {interactive && ready && (
-        <div className="mt-3 flex items-center gap-3 text-xs text-[#7A6A50] dark:text-[#B8A77F]">
-          <span>Start: <span className="font-mono">{regionStart.toFixed(2)}s</span></span>
-          <span>End: <span className="font-mono">{regionEnd.toFixed(2)}s</span></span>
+        <div className="mt-3 flex items-center gap-3 text-xs text-muted">
+          <span>
+            Start: <span className="font-mono">{regionStart.toFixed(2)}s</span>
+          </span>
+          <span>
+            End: <span className="font-mono">{regionEnd.toFixed(2)}s</span>
+          </span>
         </div>
       )}
     </div>

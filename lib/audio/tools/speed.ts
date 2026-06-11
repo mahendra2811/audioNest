@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
 import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 interface SpeedOptions {
   speed: number // 0.25-4
@@ -16,7 +16,9 @@ export async function runSpeed(
   const { speed = 1, maintainPitch = true } = opts
 
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.4, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.4, step: 'decoding' })
+  )
   if (signal?.aborted) throw new Error('ABORTED')
 
   if (!maintainPitch) {
@@ -31,8 +33,17 @@ export async function runSpeed(
     const rendered = await offline.startRendering()
     if (signal?.aborted) throw new Error('ABORTED')
     onProgress({ percent: 70, step: 'encoding' })
-    const blob = await encodeAudioBuffer(rendered, 'mp3', (p) => onProgress({ percent: 70 + p.percent * 0.3, step: 'encoding' }))
-    return { blob, name: file.name.replace(/.[^.]+$/, `-${speed}x.mp3`), size: blob.size, duration: rendered.duration, mimeType: 'audio/mpeg', format: 'MP3' }
+    const blob = await encodeAudioBuffer(rendered, 'mp3', (p) =>
+      onProgress({ percent: 70 + p.percent * 0.3, step: 'encoding' })
+    )
+    return {
+      blob,
+      name: file.name.replace(/.[^.]+$/, `-${speed}x.mp3`),
+      size: blob.size,
+      duration: rendered.duration,
+      mimeType: 'audio/mpeg',
+      format: 'MP3',
+    }
   }
 
   // Maintain pitch: use SoundTouch via phase vocoder approach
@@ -45,16 +56,31 @@ export async function runSpeed(
   // ffmpeg atempo accepts 0.5-2.0; chain for extremes
   let s = speed
   const parts: number[] = []
-  while (s > 2.0) { parts.push(2.0); s /= 2.0 }
-  while (s < 0.5) { parts.push(0.5); s /= 0.5 }
+  while (s > 2.0) {
+    parts.push(2.0)
+    s /= 2.0
+  }
+  while (s < 0.5) {
+    parts.push(0.5)
+    s /= 0.5
+  }
   parts.push(s)
-  const atempoFilter = parts.map(v => `atempo=${v.toFixed(4)}`).join(',')
+  const atempoFilter = parts.map((v) => `atempo=${v.toFixed(4)}`).join(',')
 
-  const output = await ffmpegExec(wavBlob, 'input.wav', 'output.mp3', [
-    '-af', atempoFilter,
-    '-c:a', 'libmp3lame', '-b:a', '192k',
-  ], onProgress)
+  const output = await ffmpegExec(
+    wavBlob,
+    'input.wav',
+    'output.mp3',
+    ['-af', atempoFilter, '-c:a', 'libmp3lame', '-b:a', '192k'],
+    onProgress
+  )
   if (signal?.aborted) throw new Error('ABORTED')
   const blob = new Blob([output.buffer as ArrayBuffer], { type: 'audio/mpeg' })
-  return { blob, name: file.name.replace(/.[^.]+$/, `-${speed}x.mp3`), size: blob.size, mimeType: 'audio/mpeg', format: 'MP3' }
+  return {
+    blob,
+    name: file.name.replace(/.[^.]+$/, `-${speed}x.mp3`),
+    size: blob.size,
+    mimeType: 'audio/mpeg',
+    format: 'MP3',
+  }
 }

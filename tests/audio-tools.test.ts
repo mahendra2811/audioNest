@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 // ─── audioBufferToWav ──────────────────────────────────────────────────────────
 describe('audioBufferToWav', () => {
@@ -19,10 +19,16 @@ describe('audioBufferToWav', () => {
 
     // WAV signature
     const riff = String.fromCharCode(
-      view.getUint8(0), view.getUint8(1), view.getUint8(2), view.getUint8(3)
+      view.getUint8(0),
+      view.getUint8(1),
+      view.getUint8(2),
+      view.getUint8(3)
     )
     const wave = String.fromCharCode(
-      view.getUint8(8), view.getUint8(9), view.getUint8(10), view.getUint8(11)
+      view.getUint8(8),
+      view.getUint8(9),
+      view.getUint8(10),
+      view.getUint8(11)
     )
 
     expect(riff).toBe('RIFF')
@@ -57,7 +63,7 @@ describe('pitch semitone calculation', () => {
   it('computes correct sample rate for +12 semitones (octave up)', () => {
     const sampleRate = 44100
     const semitones = 12
-    const pitchFactor = Math.pow(2, semitones / 12)
+    const pitchFactor = 2 ** (semitones / 12)
     const newRate = Math.round(sampleRate * pitchFactor)
     expect(newRate).toBe(88200) // exactly double
   })
@@ -65,7 +71,7 @@ describe('pitch semitone calculation', () => {
   it('computes correct sample rate for -12 semitones (octave down)', () => {
     const sampleRate = 44100
     const semitones = -12
-    const pitchFactor = Math.pow(2, semitones / 12)
+    const pitchFactor = 2 ** (semitones / 12)
     const newRate = Math.round(sampleRate * pitchFactor)
     expect(newRate).toBe(22050) // exactly half
   })
@@ -73,7 +79,7 @@ describe('pitch semitone calculation', () => {
   it('computes correct sample rate for 0 semitones (no change)', () => {
     const sampleRate = 44100
     const semitones = 0
-    const pitchFactor = Math.pow(2, semitones / 12)
+    const pitchFactor = 2 ** (semitones / 12)
     const newRate = Math.round(sampleRate * pitchFactor)
     expect(newRate).toBe(44100)
   })
@@ -84,10 +90,16 @@ describe('speed atempo filter chaining', () => {
   function buildAtempoFilter(speed: number): string {
     let s = speed
     const parts: number[] = []
-    while (s > 2.0) { parts.push(2.0); s /= 2.0 }
-    while (s < 0.5) { parts.push(0.5); s /= 0.5 }
+    while (s > 2.0) {
+      parts.push(2.0)
+      s /= 2.0
+    }
+    while (s < 0.5) {
+      parts.push(0.5)
+      s /= 0.5
+    }
     parts.push(s)
-    return parts.map(v => `atempo=${v.toFixed(4)}`).join(',')
+    return parts.map((v) => `atempo=${v.toFixed(4)}`).join(',')
   }
 
   it('uses single atempo for speed in 0.5-2.0 range', () => {
@@ -139,19 +151,19 @@ describe('loop length calculation', () => {
 describe('volume gain conversion', () => {
   it('converts 0 dB to 1.0 linear', () => {
     const gainDb = 0
-    const gainLinear = Math.pow(10, gainDb / 20)
+    const gainLinear = 10 ** (gainDb / 20)
     expect(gainLinear).toBeCloseTo(1.0, 5)
   })
 
   it('converts +6 dB to ~2.0 linear', () => {
     const gainDb = 6
-    const gainLinear = Math.pow(10, gainDb / 20)
+    const gainLinear = 10 ** (gainDb / 20)
     expect(gainLinear).toBeCloseTo(1.995, 2)
   })
 
   it('converts -20 dB to 0.1 linear', () => {
     const gainDb = -20
-    const gainLinear = Math.pow(10, gainDb / 20)
+    const gainLinear = 10 ** (gainDb / 20)
     expect(gainLinear).toBeCloseTo(0.1, 5)
   })
 })

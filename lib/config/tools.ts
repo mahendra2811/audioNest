@@ -85,7 +85,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Audio Cutter — Free Online Audio Trimmer',
-      description: 'Cut and trim audio files online for free. No upload, works 100% in your browser.',
+      description:
+        'Cut and trim audio files online for free. No upload, works 100% in your browser.',
     },
   },
   {
@@ -101,7 +102,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Audio Joiner — Merge Audio Files Online Free',
-      description: 'Join and merge multiple audio files online. Add crossfade, reorder tracks, download as MP3.',
+      description:
+        'Join and merge multiple audio files online. Add crossfade, reorder tracks, download as MP3.',
     },
   },
   {
@@ -117,7 +119,8 @@ export const tools: Tool[] = [
     output: 'zip',
     seo: {
       title: 'Audio Splitter — Split Audio Files Online Free',
-      description: 'Split audio files into equal parts or by time intervals. Download as ZIP. Free, no upload.',
+      description:
+        'Split audio files into equal parts or by time intervals. Download as ZIP. Free, no upload.',
     },
   },
   {
@@ -133,7 +136,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Silence Remover — Remove Silence from Audio Free',
-      description: 'Remove silent sections from audio automatically. Set threshold and minimum duration. Free.',
+      description:
+        'Remove silent sections from audio automatically. Set threshold and minimum duration. Free.',
     },
   },
   {
@@ -167,7 +171,8 @@ export const tools: Tool[] = [
     output: 'same',
     seo: {
       title: 'Audio Converter — Convert Audio Files Online Free',
-      description: 'Convert audio to MP3, WAV, FLAC, AAC, OGG, M4A, Opus. Free, private, no upload.',
+      description:
+        'Convert audio to MP3, WAV, FLAC, AAC, OGG, M4A, Opus. Free, private, no upload.',
     },
   },
   {
@@ -183,7 +188,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Video to Audio — Extract Audio from Video Free',
-      description: 'Extract audio from MP4, MOV, MKV, AVI, WebM videos. Download as MP3, WAV or AAC.',
+      description:
+        'Extract audio from MP4, MOV, MKV, AVI, WebM videos. Download as MP3, WAV or AAC.',
     },
   },
   {
@@ -199,7 +205,8 @@ export const tools: Tool[] = [
     output: 'mp4',
     seo: {
       title: 'Photo to Video — Create Video from Image + Audio Free',
-      description: 'Create a video from a photo and audio file. Perfect for lyric videos and podcasts.',
+      description:
+        'Create a video from a photo and audio file. Perfect for lyric videos and podcasts.',
     },
   },
 
@@ -217,7 +224,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Noise Remover — Remove Background Noise from Audio Free',
-      description: 'Remove background noise from audio using AI. Best for voice recordings. Free, on-device.',
+      description:
+        'Remove background noise from audio using AI. Best for voice recordings. Free, on-device.',
     },
   },
   {
@@ -267,7 +275,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Audio Normalizer — Normalize Audio Loudness Online Free',
-      description: 'Normalize audio to −14 LUFS (streaming), −16 LUFS (podcast), or −23 LUFS (broadcast).',
+      description:
+        'Normalize audio to −14 LUFS (streaming), −16 LUFS (podcast), or −23 LUFS (broadcast).',
     },
   },
   {
@@ -283,7 +292,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Bass Booster — Boost Bass in Audio Online Free',
-      description: 'Boost bass frequencies up to +12 dB with a lowshelf filter. Free, on-device processing.',
+      description:
+        'Boost bass frequencies up to +12 dB with a lowshelf filter. Free, on-device processing.',
     },
   },
   {
@@ -299,7 +309,8 @@ export const tools: Tool[] = [
     output: 'display',
     seo: {
       title: 'Loudness Meter — Measure Audio LUFS Online Free',
-      description: 'Analyze audio loudness: Integrated LUFS, LRA, True Peak, RMS, Peak dBFS. EBU R128.',
+      description:
+        'Analyze audio loudness: Integrated LUFS, LRA, True Peak, RMS, Peak dBFS. EBU R128.',
     },
   },
 
@@ -317,7 +328,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Reverb Adder — Add Reverb to Audio Online Free',
-      description: 'Add reverb to audio: Room, Hall, Church, Cave, Studio, Plate presets. Free, on-device.',
+      description:
+        'Add reverb to audio: Room, Hall, Church, Cave, Studio, Plate presets. Free, on-device.',
     },
   },
   {
@@ -333,7 +345,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Speed Changer — Change Audio Speed Without Pitch Shift',
-      description: 'Change audio speed from 0.25× to 4× while keeping the original pitch. Free, on-device.',
+      description:
+        'Change audio speed from 0.25× to 4× while keeping the original pitch. Free, on-device.',
     },
   },
   {
@@ -349,7 +362,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Pitch Shifter — Change Pitch Online Free',
-      description: 'Shift audio pitch ±12 semitones without changing speed. Free, on-device, no upload.',
+      description:
+        'Shift audio pitch ±12 semitones without changing speed. Free, on-device, no upload.',
     },
   },
 
@@ -367,7 +381,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Stereo to Mono — Convert Audio Channels Online Free',
-      description: 'Convert stereo audio to mono. Reduces file size by ~50%. Free, instant, no upload.',
+      description:
+        'Convert stereo audio to mono. Reduces file size by ~50%. Free, instant, no upload.',
     },
   },
   {
@@ -419,7 +434,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'ID3 Tag Editor — Edit MP3 Tags Online Free',
-      description: 'Edit MP3 ID3 tags: title, artist, album, year, genre, cover art. Free, on-device.',
+      description:
+        'Edit MP3 ID3 tags: title, artist, album, year, genre, cover art. Free, on-device.',
     },
   },
   {
@@ -435,7 +451,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Metadata Remover — Strip Audio Metadata Online Free',
-      description: 'Remove all metadata from audio files including GPS location and device info. Privacy first.',
+      description:
+        'Remove all metadata from audio files including GPS location and device info. Privacy first.',
     },
   },
 
@@ -453,7 +470,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Loop Maker — Create Audio Loops Online Free',
-      description: 'Loop audio 2–50× with optional gaps between. Preview and export. Free, on-device.',
+      description:
+        'Loop audio 2–50× with optional gaps between. Preview and export. Free, on-device.',
     },
   },
   {
@@ -469,7 +487,8 @@ export const tools: Tool[] = [
     output: 'display',
     seo: {
       title: 'Audio Info — Inspect Audio File Details Free',
-      description: 'View format, codec, bitrate, sample rate, duration, ID3 tags, and cover art of any audio.',
+      description:
+        'View format, codec, bitrate, sample rate, duration, ID3 tags, and cover art of any audio.',
     },
   },
 
@@ -503,7 +522,8 @@ export const tools: Tool[] = [
     output: 'zip',
     seo: {
       title: 'Stem Splitter — Split Audio into Stems Free (Coming Soon)',
-      description: 'Separate audio into stems: vocals, drums, bass, and other instruments. Coming soon.',
+      description:
+        'Separate audio into stems: vocals, drums, bass, and other instruments. Coming soon.',
     },
   },
   {
@@ -519,7 +539,8 @@ export const tools: Tool[] = [
     output: 'mp3',
     seo: {
       title: 'Beat Sequencer — Make Beats Online Free (Coming Soon)',
-      description: 'Create beats with a step sequencer grid. Set BPM, place sounds, export. Coming soon.',
+      description:
+        'Create beats with a step sequencer grid. Set BPM, place sounds, export. Coming soon.',
     },
   },
   {

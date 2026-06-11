@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
 import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 interface LoopOptions {
   count: number // 2-50
@@ -16,7 +16,9 @@ export async function runLoop(
   const { count = 4, gap = 0 } = opts
 
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.3, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.3, step: 'decoding' })
+  )
   if (signal?.aborted) throw new Error('ABORTED')
 
   const gapSamples = Math.floor(gap * buffer.sampleRate)
@@ -38,5 +40,12 @@ export async function runLoop(
   const blob = await encodeAudioBuffer(rendered, 'mp3', (p) =>
     onProgress({ percent: 70 + p.percent * 0.3, step: 'encoding' })
   )
-  return { blob, name: file.name.replace(/.[^.]+$/, `-loop-x${count}.mp3`), size: blob.size, duration: rendered.duration, mimeType: 'audio/mpeg', format: 'MP3' }
+  return {
+    blob,
+    name: file.name.replace(/.[^.]+$/, `-loop-x${count}.mp3`),
+    size: blob.size,
+    duration: rendered.duration,
+    mimeType: 'audio/mpeg',
+    format: 'MP3',
+  }
 }

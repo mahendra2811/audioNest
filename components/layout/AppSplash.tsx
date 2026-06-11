@@ -1,6 +1,6 @@
 'use client'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Logo } from '@/components/brand/Logo'
 
 export function AppSplash() {
@@ -23,7 +23,7 @@ export function AppSplash() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#FFFBF5] dark:bg-[#0F0A00]"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-bg"
         >
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -39,14 +39,14 @@ export function AppSplash() {
                 className="absolute inset-0 rounded-[18px]"
                 style={{
                   background:
-                    'linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.4) 50%, transparent 100%)',
+                    'linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.45) 50%, transparent 100%)',
                 }}
                 initial={{ x: '-100%' }}
                 animate={{ x: '200%' }}
                 transition={{ duration: 1, ease: 'easeInOut', delay: 0.3 }}
               />
             </div>
-            <p className="font-bold text-xl tracking-tight text-[#1A1208] dark:text-[#FFF8ED]">
+            <p className="text-xl font-bold tracking-tight text-fg">
               Audio<span className="text-brand">Nest</span>
             </p>
           </motion.div>

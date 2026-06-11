@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { getFFmpeg } from '../ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
+import { getFFmpeg } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 interface SilenceOptions {
   threshold?: number // dB, e.g. -30
@@ -22,9 +22,14 @@ export async function runSilenceRemove(
   await ffmpeg.writeFile(`input.${inputExt}`, await fetchFile(file))
 
   await ffmpeg.exec([
-    '-i', `input.${inputExt}`,
-    '-af', `silenceremove=stop_periods=-1:stop_duration=${minDuration}:stop_threshold=${threshold}dB`,
-    '-c:a', 'libmp3lame', '-b:a', '192k',
+    '-i',
+    `input.${inputExt}`,
+    '-af',
+    `silenceremove=stop_periods=-1:stop_duration=${minDuration}:stop_threshold=${threshold}dB`,
+    '-c:a',
+    'libmp3lame',
+    '-b:a',
+    '192k',
     'output.mp3',
   ])
 

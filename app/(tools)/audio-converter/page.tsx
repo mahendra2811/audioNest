@@ -1,18 +1,19 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { FileMeta } from '@/components/tool/FileMeta'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { GlassCard } from '@/components/glass/GlassCard'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { AudioMeta, Progress, ToolResult, ToolError } from '@/lib/audio/types'
+import { Button } from '@/components/ui/Button'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import type { ExportFormat } from '@/lib/audio/encode'
+import type { AudioMeta, Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
 
 const tool = getToolBySlug('audio-converter')!
 
@@ -29,7 +30,7 @@ const FORMATS: Array<{ id: ExportFormat; label: string; lossy: boolean }> = [
 const BITRATES = [64, 96, 128, 192, 256, 320]
 
 const ACCEPT = Object.fromEntries(
-  [...AUDIO_ACCEPTS].filter(a => a.startsWith('audio/')).map(m => [m, []])
+  [...AUDIO_ACCEPTS].filter((a) => a.startsWith('audio/')).map((m) => [m, []])
 )
 
 export default function AudioConverterPage() {
@@ -48,13 +49,11 @@ export default function AudioConverterPage() {
     setFile(f)
     setResult(null)
     setError(null)
-    // Get basic meta
-    const inputFmt = f.name.split('.').pop()?.toUpperCase() || 'UNKNOWN'
     setMeta({
       name: f.name,
       size: f.size,
       duration: 0,
-      format: inputFmt,
+      format: f.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
       sampleRate: 44100,
       numberOfChannels: 2,
     })
@@ -71,7 +70,12 @@ export default function AudioConverterPage() {
 
     try {
       const { runConvert } = await import('@/lib/audio/tools/convert')
-      const res = await runConvert(file, { targetFormat, bitrate }, (p) => setProgress(p), ctrl.signal)
+      const res = await runConvert(
+        file,
+        { targetFormat, bitrate },
+        (p) => setProgress(p),
+        ctrl.signal
+      )
       setResult(res)
       toast.success('Conversion complete!')
     } catch (e) {
@@ -101,129 +105,84 @@ export default function AudioConverterPage() {
   }
 
   const inputFormat = file?.name.split('.').pop()?.toLowerCase() || ''
-  const isLossyConversion =
-    ['wav', 'flac', 'aiff'].includes(inputFormat) &&
-    FORMATS.find(f => f.id === targetFormat)?.lossy
+  const isLossy = FORMATS.find((f) => f.id === targetFormat)?.lossy
+  const isLossyConversion = ['wav', 'flac', 'aiff'].includes(inputFormat) && isLossy
 
   return (
     <ToolShell
       tool={tool}
-      description="AudioNest converts audio files entirely in your browser using ffmpeg.wasm — a version of the industry-standard FFmpeg compiled to WebAssembly. No audio data is uploaded. Converting from a lossless format (WAV, FLAC) to a lossy format (MP3, AAC) permanently reduces quality."
+      description="AudioNest converts audio files entirely in your browser using ffmpeg.wasm — the industry-standard FFmpeg compiled to WebAssembly. No audio data is uploaded. Converting from a lossless format (WAV, FLAC) to a lossy format (MP3, AAC) permanently reduces quality."
     >
       {!file && (
-        <Dropzone
-          onFile={handleFile}
-          accept={ACCEPT}
-          label="Drop an audio file to convert"
-        />
+        <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop an audio file to convert" />
       )}
 
       {file && !progress && (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-6">
           {meta && <FileMeta meta={meta} />}
 
-          {/* Format picker */}
-          <div>
-            <p className="text-sm font-medium text-[#1A1208] dark:text-[#FFF8ED] mb-2">Output format</p>
-            <div className="flex flex-wrap gap-2">
-              {FORMATS.map(({ id, label }) => (
-                <button
-                  key={id}
-                  onClick={() => setTargetFormat(id)}
-                  className={cn(
-                    'px-4 py-1.5 rounded-xl text-sm font-medium border transition-all',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400',
-                    targetFormat === id
-                      ? 'text-white border-transparent'
-                      : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#1A1208] dark:text-[#FFF8ED] hover:bg-white/10'
-                  )}
-                  style={targetFormat === id ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-col gap-2.5">
+            <p className="text-sm font-medium text-fg">Output format</p>
+            <SegmentedControl
+              aria-label="Output format"
+              columns={4}
+              value={targetFormat}
+              onChange={(v) => setTargetFormat(v as ExportFormat)}
+              options={FORMATS.map((f) => ({ value: f.id, label: f.label }))}
+            />
           </div>
 
-          {/* Lossy warning */}
           {isLossyConversion && (
-            <GlassCard intensity="light" className="px-4 py-3 border border-amber-300/30">
-              <p className="text-sm text-amber-700 dark:text-amber-400">
-                Converting from lossless to {targetFormat.toUpperCase()} is lossy — audio quality will be permanently reduced.
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3">
+              <AlertTriangle size={16} className="mt-0.5 shrink-0 text-amber-500" />
+              <p className="text-sm text-amber-700 dark:text-amber-300">
+                Converting from lossless to {targetFormat.toUpperCase()} is lossy — quality will be
+                permanently reduced.
               </p>
-            </GlassCard>
-          )}
-
-          {/* Bitrate (lossy formats) */}
-          {FORMATS.find(f => f.id === targetFormat)?.lossy && (
-            <div>
-              <p className="text-sm font-medium text-[#1A1208] dark:text-[#FFF8ED] mb-2">
-                Bitrate: <span className="font-mono">{bitrate} kbps</span>
-              </p>
-              <div className="flex gap-2 flex-wrap">
-                {BITRATES.map(b => (
-                  <button
-                    key={b}
-                    onClick={() => setBitrate(b)}
-                    className={cn(
-                      'px-3 py-1 rounded-lg text-sm border transition-all',
-                      bitrate === b
-                        ? 'text-white border-transparent'
-                        : 'bg-black/4 border-black/10 dark:bg-white/5 dark:border-white/15 text-[#7A6A50] dark:text-[#B8A77F] hover:bg-white/10'
-                    )}
-                    style={bitrate === b ? { background: 'linear-gradient(135deg, #FF8C00, #FFD700)' } : {}}
-                  >
-                    {b}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
-          <div className="flex gap-3">
-            <button
-              onClick={handleConvert}
-              className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
-              style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}
-            >
-              Convert to {targetFormat.toUpperCase()}
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-4 py-2.5 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
-            >
+          {isLossy && (
+            <div className="flex flex-col gap-2.5">
+              <p className="text-sm font-medium text-fg">
+                Bitrate <span className="font-mono text-muted">· {bitrate} kbps</span>
+              </p>
+              <SegmentedControl
+                aria-label="Bitrate"
+                columns={3}
+                value={String(bitrate)}
+                onChange={(v) => setBitrate(Number(v))}
+                options={BITRATES.map((b) => ({ value: String(b), label: `${b}`, hint: 'kbps' }))}
+              />
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={handleConvert}>Convert to {targetFormat.toUpperCase()}</Button>
+            <Button variant="secondary" onClick={handleReset}>
               Change file
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {progress && (
-        <div className="flex flex-col items-center py-10 gap-6">
-          <ProgressRing
-            percent={progress.percent}
-            step={progress.step}
-            onCancel={handleCancel}
-          />
-          <p className="text-sm text-[#7A6A50] dark:text-[#B8A77F]">Converting to {targetFormat.toUpperCase()}…</p>
+        <div className="flex flex-col items-center gap-6 py-10">
+          <ProgressRing percent={progress.percent} step={progress.step} onCancel={handleCancel} />
+          <p className="text-sm text-muted">Converting to {targetFormat.toUpperCase()}…</p>
         </div>
       )}
 
       {result && !progress && (
         <div className="flex flex-col gap-4">
           <ResultPanel result={result} originalSize={file?.size} />
-          <button
-            onClick={handleReset}
-            className="self-start px-4 py-2 rounded-xl text-sm font-medium bg-black/5 border border-black/10 hover:bg-black/8 dark:bg-white/10 dark:border-white/20 dark:hover:bg-white/20 transition-all"
-          >
+          <Button variant="secondary" size="sm" className="self-start" onClick={handleReset}>
             Convert another file
-          </button>
+          </Button>
         </div>
       )}
 
-      {error && (
-        <ErrorCard error={error} onRetry={handleReset} />
-      )}
+      {error && <ErrorCard error={error} onRetry={handleReset} />}
     </ToolShell>
   )
 }

@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { getFFmpeg } from '../ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
+import { getFFmpeg } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 interface PhotoToVideoOptions {
   imageMime?: string
@@ -23,14 +23,22 @@ export async function runPhotoToVideo(
   onProgress({ percent: 20, step: 'processing' })
 
   await ffmpeg.exec([
-    '-loop', '1',
-    '-i', `image.${imgExt}`,
-    '-i', `audio.${audioExt}`,
-    '-c:v', 'libx264',
-    '-pix_fmt', 'yuv420p',
-    '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-    '-c:a', 'aac',
-    '-b:a', '192k',
+    '-loop',
+    '1',
+    '-i',
+    `image.${imgExt}`,
+    '-i',
+    `audio.${audioExt}`,
+    '-c:v',
+    'libx264',
+    '-pix_fmt',
+    'yuv420p',
+    '-vf',
+    'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+    '-c:a',
+    'aac',
+    '-b:a',
+    '192k',
     '-shortest',
     'output.mp4',
   ])

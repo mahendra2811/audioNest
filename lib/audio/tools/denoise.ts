@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { decodeFile, audioBufferToWav } from '../decode'
+import { audioBufferToWav, decodeFile } from '../decode'
 import { ffmpegExec } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 export async function runDenoise(
   file: File,
@@ -9,7 +9,9 @@ export async function runDenoise(
   signal?: AbortSignal
 ): Promise<ToolResult> {
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.3, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.3, step: 'decoding' })
+  )
   if (signal?.aborted) throw new Error('ABORTED')
 
   // Try RNNoise via @sapphi-red/web-noise-suppressor if worklet files are available
@@ -27,11 +29,7 @@ export async function runDenoise(
     await ctx.audioWorklet.addModule('/audio-worklets/rnnoise-processor.js')
     onProgress({ percent: 40, step: 'processing' })
 
-    const offline = new OfflineAudioContext(
-      1,
-      Math.ceil(buffer.duration * 48000),
-      48000
-    )
+    const offline = new OfflineAudioContext(1, Math.ceil(buffer.duration * 48000), 48000)
     await offline.audioWorklet.addModule('/audio-worklets/rnnoise-processor.js')
 
     const src = offline.createBufferSource()

@@ -1,5 +1,5 @@
-import { MAX_DURATION, MAX_FILE_SIZE } from './types'
 import type { AudioMeta } from './types'
+import { MAX_DURATION, MAX_FILE_SIZE } from './types'
 
 export async function validateFile(file: File): Promise<void> {
   if (file.size > MAX_FILE_SIZE) {

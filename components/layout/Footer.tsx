@@ -11,11 +11,11 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="hidden md:block border-t border-white/10 bg-white/5 backdrop-blur-sm mt-20">
-      <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex flex-col items-center md:items-start gap-2">
+    <footer className="mt-24 hidden border-t border-line bg-surface/50 md:block">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
+        <div className="flex flex-col items-center gap-2 md:items-start">
           <Wordmark size={24} />
-          <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F] max-w-xs text-center md:text-left">
+          <p className="max-w-xs text-center text-xs text-muted md:text-left">
             100% free · no upload · no sign-up · works offline
           </p>
         </div>
@@ -26,7 +26,7 @@ export function Footer() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-sm text-[#7A6A50] dark:text-[#B8A77F] hover:text-[#1A1208] dark:hover:text-[#FFF8ED] transition-colors"
+                  className="rounded text-sm text-muted transition-colors hover:text-fg"
                 >
                   {label}
                 </Link>
@@ -35,9 +35,7 @@ export function Footer() {
           </ul>
         </nav>
 
-        <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F] shrink-0">
-          © {new Date().getFullYear()} AudioNest
-        </p>
+        <p className="shrink-0 text-xs text-muted">© {new Date().getFullYear()} AudioNest</p>
       </div>
     </footer>
   )

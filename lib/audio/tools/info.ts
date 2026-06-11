@@ -1,4 +1,4 @@
-import type { OnProgress, AudioMeta, ToolResult } from '../types'
+import type { AudioMeta, OnProgress } from '../types'
 import { MAX_DURATION, MAX_FILE_SIZE } from '../types'
 
 export async function runInfo(
@@ -11,7 +11,7 @@ export async function runInfo(
   onProgress({ percent: 20, step: 'decoding' })
 
   // Try to parse metadata with music-metadata (dynamic import)
-  let tags: Record<string, string> = {}
+  const tags: Record<string, string> = {}
   let coverArt: Blob | undefined
   let codec: string | undefined
   let bitrate: number | undefined

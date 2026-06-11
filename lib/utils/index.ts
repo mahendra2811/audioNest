@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from 'clsx'
+import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -10,7 +10,7 @@ export function formatBytes(bytes: number, decimals = 2): string {
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`
+  return `${parseFloat((bytes / k ** i).toFixed(decimals))} ${sizes[i]}`
 }
 
 export function formatDuration(seconds: number): string {

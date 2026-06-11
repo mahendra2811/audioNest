@@ -1,8 +1,7 @@
 'use client'
+import { Pause, Play } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Play, Pause } from 'lucide-react'
-import { formatDuration } from '@/lib/utils'
-import { cn } from '@/lib/utils'
+import { cn, formatDuration } from '@/lib/utils'
 
 interface AudioPlayerProps {
   src: string
@@ -31,16 +30,13 @@ export function AudioPlayer({ src, label, className }: AudioPlayerProps) {
       audio.removeEventListener('loadedmetadata', onDuration)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [src])
+  }, [])
 
   const toggle = async () => {
     const audio = audioRef.current
     if (!audio) return
-    if (playing) {
-      audio.pause()
-    } else {
-      await audio.play()
-    }
+    if (playing) audio.pause()
+    else await audio.play()
     setPlaying(!playing)
   }
 
@@ -56,37 +52,33 @@ export function AudioPlayer({ src, label, className }: AudioPlayerProps) {
 
   return (
     <div className={cn('flex flex-col gap-2', className)}>
-      {label && (
-        <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F] font-medium uppercase tracking-wider">
-          {label}
-        </p>
-      )}
-      <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15">
+      {label && <p className="text-xs font-medium uppercase tracking-wider text-muted">{label}</p>}
+      <div className="flex items-center gap-3 rounded-2xl border border-line bg-surface-2 p-3">
         <audio ref={audioRef} src={src} preload="metadata" />
         <button
+          type="button"
           onClick={toggle}
           aria-label={playing ? 'Pause' : 'Play'}
-          className="w-9 h-9 rounded-full flex items-center justify-center bg-brand text-white shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
-          style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand text-white"
         >
           {playing ? <Pause size={16} /> : <Play size={16} />}
         </button>
         <div
           ref={progressRef}
           onClick={seek}
-          className="flex-1 h-1.5 bg-white/20 rounded-full cursor-pointer relative overflow-hidden"
+          className="relative h-1.5 flex-1 cursor-pointer overflow-hidden rounded-full bg-line-strong"
           role="slider"
           aria-label="Playback position"
-          aria-valuenow={current}
+          aria-valuenow={Math.round(current)}
           aria-valuemin={0}
-          aria-valuemax={duration}
+          aria-valuemax={Math.round(duration)}
         >
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-brand"
-            style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #FF8C00, #FFD700)' }}
+            style={{ width: `${pct}%` }}
           />
         </div>
-        <span className="font-mono text-xs text-[#7A6A50] dark:text-[#B8A77F] shrink-0 tabular-nums">
+        <span className="shrink-0 font-mono text-xs tabular-nums text-muted">
           {formatDuration(current)} / {formatDuration(duration)}
         </span>
       </div>

@@ -2,7 +2,8 @@ export const strings = {
   // App
   appName: 'AudioNest',
   appTagline: 'Every audio tool. Right in your browser.',
-  appSub: 'Cut, convert, clean, and create — free, private, and 100% on your device. Nothing is ever uploaded.',
+  appSub:
+    'Cut, convert, clean, and create — free, private, and 100% on your device. Nothing is ever uploaded.',
 
   // Trust strip
   trust: {

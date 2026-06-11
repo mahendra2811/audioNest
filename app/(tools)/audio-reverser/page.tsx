@@ -1,17 +1,19 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { ToolResult, ToolError, Progress } from '@/lib/audio/types'
+import type { Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { toast } from 'sonner'
 
 const tool = getToolBySlug('audio-reverser')!
-const ACCEPT = Object.fromEntries(AUDIO_ACCEPTS.filter(a => a.startsWith('audio/')).map(m => [m, []]))
+const ACCEPT = Object.fromEntries(
+  AUDIO_ACCEPTS.filter((a) => a.startsWith('audio/')).map((m) => [m, []])
+)
 
 export default function AudioReverserPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -22,23 +24,47 @@ export default function AudioReverserPage() {
   const endProcessing = useProcessingState((s) => s.end)
 
   const handleFile = async (f: File) => {
-    setFile(f); setResult(null); setError(null)
+    setFile(f)
+    setResult(null)
+    setError(null)
     setProgress({ percent: 0, step: 'decoding' })
     startProcessing()
     try {
       const { runReverse } = await import('@/lib/audio/tools/reverse')
       const res = await runReverse(f, {}, (p) => setProgress(p))
-      setResult(res); toast.success('Reversed!')
-    } catch { setError('PROCESS_FAILED') }
-    finally { setProgress(null); endProcessing() }
+      setResult(res)
+      toast.success('Reversed!')
+    } catch {
+      setError('PROCESS_FAILED')
+    } finally {
+      setProgress(null)
+      endProcessing()
+    }
   }
 
   return (
-    <ToolShell tool={tool} description="Reverses all audio channels on-device using the Web Audio API OfflineAudioContext.">
-      {!file && !progress && <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop audio to reverse" />}
-      {progress && <div className="flex justify-center py-10"><ProgressRing percent={progress.percent} step={progress.step} /></div>}
+    <ToolShell
+      tool={tool}
+      description="Reverses all audio channels on-device using the Web Audio API OfflineAudioContext."
+    >
+      {!file && !progress && (
+        <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop audio to reverse" />
+      )}
+      {progress && (
+        <div className="flex justify-center py-10">
+          <ProgressRing percent={progress.percent} step={progress.step} />
+        </div>
+      )}
       {result && !progress && <ResultPanel result={result} originalSize={file?.size} />}
-      {error && <ErrorCard error={error} onRetry={() => { setFile(null); setError(null) }} />}
+      {error && (
+        <ErrorCard
+          error={error}
+          onRetry={() => {
+            setFile(null)
+            setError(null)
+          }}
+        />
+      )}
     </ToolShell>
   )
 }

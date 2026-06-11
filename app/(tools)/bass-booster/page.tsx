@@ -1,17 +1,19 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { ToolResult, ToolError, Progress } from '@/lib/audio/types'
+import type { Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { toast } from 'sonner'
 
 const tool = getToolBySlug('bass-booster')!
-const ACCEPT = Object.fromEntries(AUDIO_ACCEPTS.filter(a => a.startsWith('audio/')).map(m => [m, []]))
+const ACCEPT = Object.fromEntries(
+  AUDIO_ACCEPTS.filter((a) => a.startsWith('audio/')).map((m) => [m, []])
+)
 
 export default function BassBoosterPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -24,32 +26,62 @@ export default function BassBoosterPage() {
 
   const handleRun = async () => {
     if (!file) return
-    setProgress({ percent: 0, step: 'decoding' }); setResult(null); setError(null)
+    setProgress({ percent: 0, step: 'decoding' })
+    setResult(null)
+    setError(null)
     startProcessing()
     try {
       const { runBass } = await import('@/lib/audio/tools/bass')
       const res = await runBass(file, { gainDb }, (p) => setProgress(p))
-      setResult(res); toast.success('Bass boosted!')
-    } catch { setError('PROCESS_FAILED') }
-    finally { setProgress(null); endProcessing() }
+      setResult(res)
+      toast.success('Bass boosted!')
+    } catch {
+      setError('PROCESS_FAILED')
+    } finally {
+      setProgress(null)
+      endProcessing()
+    }
   }
 
   return (
-    <ToolShell tool={tool} description="Applies a lowshelf BiquadFilter at 100 Hz using Web Audio API OfflineAudioContext.">
+    <ToolShell
+      tool={tool}
+      description="Applies a lowshelf BiquadFilter at 100 Hz using Web Audio API OfflineAudioContext."
+    >
       {!file && <Dropzone onFile={setFile} accept={ACCEPT} label="Drop audio to boost bass" />}
       {file && !progress && !result && (
         <div className="flex flex-col gap-5">
-          <p className="text-sm text-[#1A1208] dark:text-[#FFF8ED]">{file.name}</p>
+          <p className="text-sm text-[var(--fg)] dark:text-[var(--fg)]">{file.name}</p>
           <div>
-            <p className="text-sm font-medium mb-2 text-[#1A1208] dark:text-[#FFF8ED]">Bass boost: <span className="font-mono">+{gainDb} dB</span></p>
-            <input type="range" min={0} max={12} step={1} value={gainDb} onChange={(e) => setGainDb(Number(e.target.value))} className="w-full accent-orange-500" aria-label="Bass gain" />
+            <p className="text-sm font-medium mb-2 text-[var(--fg)] dark:text-[var(--fg)]">
+              Bass boost: <span className="font-mono">+{gainDb} dB</span>
+            </p>
+            <input
+              type="range"
+              min={0}
+              max={12}
+              step={1}
+              value={gainDb}
+              onChange={(e) => setGainDb(Number(e.target.value))}
+              className="w-full accent-indigo-500"
+              aria-label="Bass gain"
+            />
           </div>
-          <button onClick={handleRun} className="px-6 py-2.5 rounded-xl font-medium text-sm text-white" style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}>
+          <button
+            type="button"
+            onClick={handleRun}
+            className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+          >
             Apply
           </button>
         </div>
       )}
-      {progress && <div className="flex justify-center py-10"><ProgressRing percent={progress.percent} step={progress.step} /></div>}
+      {progress && (
+        <div className="flex justify-center py-10">
+          <ProgressRing percent={progress.percent} step={progress.step} />
+        </div>
+      )}
       {result && !progress && <ResultPanel result={result} originalSize={file?.size} />}
       {error && <ErrorCard error={error} onRetry={() => setError(null)} />}
     </ToolShell>

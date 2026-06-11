@@ -1,127 +1,196 @@
 @import "tailwindcss";
 
-@theme {
-  /* Brand */
-  --color-brand-orange: #FF8C00;
-  --color-brand-gold: #FFD700;
+/* next-themes sets class="dark" on <html> — make the dark: variant key off it */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Light mode */
-  --color-bg: #FFFBF5;
-  --color-surface: #FFFFFF;
-  --color-text: #1A1208;
-  --color-muted: #7A6A50;
+/* ────────────────────────────────────────────────────────────────────────
+   Design tokens — semantic colors that flip with the theme.
+   Components use bg-surface / text-fg / text-muted / border-line / bg-primary
+   instead of hard-coded hex, so light + dark stay correct in one place.
+   ──────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
 
-  /* Dark mode */
-  --color-bg-dark: #0F0A00;
-  --color-surface-dark: #1A1200;
-  --color-text-dark: #FFF8ED;
-  --color-muted-dark: #B8A77F;
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-tint: var(--tint);
 
-  /* Radius */
-  --radius-glass: 1.5rem;
   --radius-card: 1rem;
+  --radius-panel: 1.25rem;
 
-  /* Font */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 :root {
-  --background: var(--color-bg);
-  --foreground: var(--color-text);
+  /* Light (primary, fully polished) */
+  --bg: #faf9ff;
+  --surface: #ffffff;
+  --surface-2: #f3f3fb;
+  --fg: #1e1b2e;
+  --muted: #6b7280;
+  --line: rgba(30, 27, 46, 0.1);
+  --line-strong: rgba(30, 27, 46, 0.16);
+
+  --primary: #4f46e5; /* indigo-600 — button bg / solid accents */
+  --primary-fg: #ffffff;
+  --primary-soft: rgba(79, 70, 229, 0.1); /* soft chip / active tint */
+  --tint: #4f46e5; /* link + icon accent text (AA on white) */
+
+  /* Brand gradient ends (indigo → violet) */
+  --grad-from: #6366f1;
+  --grad-to: #8b5cf6;
+
+  --ring: #6366f1;
+  color-scheme: light;
 }
 
 .dark {
-  --background: var(--color-bg-dark);
-  --foreground: var(--color-text-dark);
+  /* Dark (clean inversion, same system) */
+  --bg: #0b0a12;
+  --surface: #15131f;
+  --surface-2: #1e1b2b;
+  --fg: #eceaf6;
+  --muted: #9b95b0;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  --primary: #6366f1;
+  --primary-fg: #ffffff;
+  --primary-soft: rgba(129, 140, 248, 0.16);
+  --tint: #a5b4fc; /* lighter indigo for legibility on dark */
+
+  --grad-from: #6366f1;
+  --grad-to: #8b5cf6;
+
+  --ring: #818cf8;
+  color-scheme: dark;
 }
 
+/* ─── base ─────────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
-html,
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
+  min-height: 100dvh;
   max-width: 100vw;
   overflow-x: hidden;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Brand gradient utilities */
+::selection {
+  background: color-mix(in oklab, var(--primary) 25%, transparent);
+}
+
+/* Accessible focus ring for anything without an explicit ring utility */
+:where(a, button, [role="button"], input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ─── brand gradient utilities (the ONLY place the gradient lives) ──────── */
 .bg-brand {
-  background: linear-gradient(135deg, #FF8C00, #FFD700);
+  background-image: linear-gradient(135deg, var(--grad-from), var(--grad-to));
 }
-
 .text-brand {
-  background: linear-gradient(135deg, #FF8C00, #FFD700);
+  background-image: linear-gradient(135deg, var(--grad-from), var(--grad-to));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.border-brand {
+  border-color: color-mix(in oklab, var(--grad-from) 60%, transparent);
 }
 
-/* Glass utilities — light mode uses higher opacity; dark mode stays translucent */
-.glass-heavy {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* ─── consistent range slider across every tool ────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1.5rem;
+  background: transparent;
+  cursor: pointer;
 }
-.dark .glass-heavy {
-  background: rgba(255, 255, 255, 0.15);
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
 }
-
-.glass-medium {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
 }
-.dark .glass-medium {
-  background: rgba(255, 255, 255, 0.10);
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.12s ease;
 }
-
-.glass-light {
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
-.dark .glass-light {
-  background: rgba(255, 255, 255, 0.05);
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.12);
 }
-
-/* Specular edge - top-left bright, bottom-right fades */
-.glass-edge {
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 8px 32px rgba(255, 140, 0, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Warm orange-cast drop shadow */
-.glass-shadow {
-  box-shadow:
-    0 20px 60px rgba(255, 140, 0, 0.12),
-    0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* Chromatic rim (subtle) */
-.glass-chromatic::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255, 140, 0, 0.3), transparent 40%, rgba(255, 215, 0, 0.3) 100%);
-  pointer-events: none;
-  z-index: 0;
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
-/* Motion reduction */
+/* ─── thin themed scrollbar (sidebar etc.) ─────────────────────────────── */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 9999px;
+}
+
+/* ─── motion preferences ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
   }
 }

@@ -1,17 +1,19 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Dropzone } from '@/components/tool/Dropzone'
+import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ProgressRing } from '@/components/tool/ProgressRing'
 import { ResultPanel } from '@/components/tool/ResultPanel'
-import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { getToolBySlug, AUDIO_ACCEPTS } from '@/lib/config/tools'
-import type { ToolResult, ToolError, Progress } from '@/lib/audio/types'
+import type { Progress, ToolError, ToolResult } from '@/lib/audio/types'
+import { AUDIO_ACCEPTS, getToolBySlug } from '@/lib/config/tools'
 import { useProcessingState } from '@/lib/store/processing'
-import { toast } from 'sonner'
 
 const tool = getToolBySlug('speed-changer')!
-const ACCEPT = Object.fromEntries(AUDIO_ACCEPTS.filter(a => a.startsWith('audio/')).map(m => [m, []]))
+const ACCEPT = Object.fromEntries(
+  AUDIO_ACCEPTS.filter((a) => a.startsWith('audio/')).map((m) => [m, []])
+)
 
 export default function SpeedChangerPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -25,35 +27,76 @@ export default function SpeedChangerPage() {
 
   const handleRun = async () => {
     if (!file) return
-    setProgress({ percent: 0, step: 'decoding' }); setResult(null); setError(null)
+    setProgress({ percent: 0, step: 'decoding' })
+    setResult(null)
+    setError(null)
     startProcessing()
     try {
       const { runSpeed } = await import('@/lib/audio/tools/speed')
       const res = await runSpeed(file, { speed, maintainPitch }, (p) => setProgress(p))
-      setResult(res); toast.success('Speed changed!')
-    } catch { setError('PROCESS_FAILED') }
-    finally { setProgress(null); endProcessing() }
+      setResult(res)
+      toast.success('Speed changed!')
+    } catch {
+      setError('PROCESS_FAILED')
+    } finally {
+      setProgress(null)
+      endProcessing()
+    }
   }
 
   return (
-    <ToolShell tool={tool} description="Changes audio speed using ffmpeg atempo filter (maintain-pitch on by default) on-device.">
+    <ToolShell
+      tool={tool}
+      description="Changes audio speed using ffmpeg atempo filter (maintain-pitch on by default) on-device."
+    >
       {!file && <Dropzone onFile={setFile} accept={ACCEPT} label="Drop audio to change speed" />}
       {file && !progress && !result && (
         <div className="flex flex-col gap-5">
-          <p className="text-sm text-[#1A1208] dark:text-[#FFF8ED]">{file.name}</p>
+          <p className="text-sm text-[var(--fg)] dark:text-[var(--fg)]">{file.name}</p>
           <div>
-            <p className="text-sm font-medium mb-2 text-[#1A1208] dark:text-[#FFF8ED]">Speed: <span className="font-mono">{speed}×</span></p>
-            <input type="range" min={0.25} max={4} step={0.05} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="w-full accent-orange-500" aria-label="Playback speed" />
-            <div className="flex justify-between text-xs text-[#7A6A50] mt-1"><span>0.25×</span><span>1×</span><span>4×</span></div>
+            <p className="text-sm font-medium mb-2 text-[var(--fg)] dark:text-[var(--fg)]">
+              Speed: <span className="font-mono">{speed}×</span>
+            </p>
+            <input
+              type="range"
+              min={0.25}
+              max={4}
+              step={0.05}
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+              className="w-full accent-indigo-500"
+              aria-label="Playback speed"
+            />
+            <div className="flex justify-between text-xs text-[var(--muted)] mt-1">
+              <span>0.25×</span>
+              <span>1×</span>
+              <span>4×</span>
+            </div>
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={maintainPitch} onChange={(e) => setMaintainPitch(e.target.checked)} className="accent-orange-500 w-4 h-4" />
-            <span className="text-sm text-[#1A1208] dark:text-[#FFF8ED]">Maintain pitch</span>
+            <input
+              type="checkbox"
+              checked={maintainPitch}
+              onChange={(e) => setMaintainPitch(e.target.checked)}
+              className="accent-indigo-500 w-4 h-4"
+            />
+            <span className="text-sm text-[var(--fg)] dark:text-[var(--fg)]">Maintain pitch</span>
           </label>
-          <button onClick={handleRun} className="px-6 py-2.5 rounded-xl font-medium text-sm text-white" style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}>Apply</button>
+          <button
+            type="button"
+            onClick={handleRun}
+            className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+          >
+            Apply
+          </button>
         </div>
       )}
-      {progress && <div className="flex justify-center py-10"><ProgressRing percent={progress.percent} step={progress.step} /></div>}
+      {progress && (
+        <div className="flex justify-center py-10">
+          <ProgressRing percent={progress.percent} step={progress.step} />
+        </div>
+      )}
       {result && !progress && <ResultPanel result={result} originalSize={file?.size} />}
       {error && <ErrorCard error={error} onRetry={() => setError(null)} />}
     </ToolShell>

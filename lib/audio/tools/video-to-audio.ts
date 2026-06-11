@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
-import { getFFmpeg } from '../ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
+import { getFFmpeg } from '../ffmpeg'
+import type { OnProgress, ToolResult } from '../types'
 
 type AudioFormat = 'mp3' | 'wav' | 'aac'
 
@@ -42,5 +42,11 @@ export async function runVideoToAudio(
 
   const blob = new Blob([(output as Uint8Array).buffer as ArrayBuffer], { type: mimeMap[format] })
   const outName = file.name.replace(/.[^.]+$/, `.${format}`)
-  return { blob, name: outName, size: blob.size, mimeType: mimeMap[format], format: format.toUpperCase() }
+  return {
+    blob,
+    name: outName,
+    size: blob.size,
+    mimeType: mimeMap[format],
+    format: format.toUpperCase(),
+  }
 }

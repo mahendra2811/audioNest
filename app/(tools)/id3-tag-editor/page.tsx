@@ -1,15 +1,15 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { Download } from 'lucide-react'
+import Image from 'next/image'
+import { useCallback, useState } from 'react'
+import { toast } from 'sonner'
+import { GlassCard } from '@/components/glass/GlassCard'
 import { Dropzone } from '@/components/tool/Dropzone'
 import { ErrorCard } from '@/components/tool/ErrorCard'
 import { ToolShell } from '@/components/tool/ToolShell'
-import { GlassCard } from '@/components/glass/GlassCard'
-import { Download } from 'lucide-react'
-import { getToolBySlug } from '@/lib/config/tools'
-import type { ID3Tags, ID3ReadResult } from '@/lib/audio/tools/id3'
+import type { ID3ReadResult, ID3Tags } from '@/lib/audio/tools/id3'
 import type { ToolError } from '@/lib/audio/types'
-import { toast } from 'sonner'
-import Image from 'next/image'
+import { getToolBySlug } from '@/lib/config/tools'
 
 const tool = getToolBySlug('id3-tag-editor')!
 const ACCEPT = { 'audio/mpeg': ['.mp3'], 'audio/mp3': ['.mp3'] }
@@ -33,68 +33,109 @@ export default function ID3TagEditorPage() {
   const [error, setError] = useState<ToolError | null>(null)
 
   const handleFile = useCallback(async (f: File) => {
-    setFile(f); setTags({}); setResultBlob(null); setError(null)
+    setFile(f)
+    setTags({})
+    setResultBlob(null)
+    setError(null)
     try {
       const { readID3 } = await import('@/lib/audio/tools/id3')
       const read = await readID3(f)
       setTags(read)
-    } catch { /* no existing tags */ }
+    } catch {
+      /* no existing tags */
+    }
   }, [])
 
   const handleSave = async () => {
     if (!file) return
-    setSaving(true); setResultBlob(null)
+    setSaving(true)
+    setResultBlob(null)
     try {
       const { writeID3 } = await import('@/lib/audio/tools/id3')
       const blob = await writeID3(file, { ...tags, coverArt: coverFile || undefined }, () => {})
       setResultBlob(blob)
       toast.success('Tags saved!')
-    } catch { setError('PROCESS_FAILED') }
-    finally { setSaving(false) }
+    } catch {
+      setError('PROCESS_FAILED')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
-    <ToolShell tool={tool} description="Reads and writes ID3v2 tags to MP3 files using browser-id3-writer on-device.">
-      {!file && <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop an MP3 to edit its tags" />}
+    <ToolShell
+      tool={tool}
+      description="Reads and writes ID3v2 tags to MP3 files using browser-id3-writer on-device."
+    >
+      {!file && (
+        <Dropzone onFile={handleFile} accept={ACCEPT} label="Drop an MP3 to edit its tags" />
+      )}
       {file && !saving && !resultBlob && (
         <div className="flex flex-col gap-4">
           {tags.existingCoverUrl && (
             <div className="flex items-center gap-3">
-              <Image src={tags.existingCoverUrl} alt="Current cover" width={60} height={60} className="rounded-xl object-cover" />
-              <p className="text-xs text-[#7A6A50] dark:text-[#B8A77F]">Current cover art</p>
+              <Image
+                src={tags.existingCoverUrl}
+                alt="Current cover"
+                width={60}
+                height={60}
+                className="rounded-xl object-cover"
+              />
+              <p className="text-xs text-[var(--muted)] dark:text-[var(--muted)]">
+                Current cover art
+              </p>
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {FIELDS.map(({ key, label, type }) => (
               <div key={key}>
-                <label className="text-xs uppercase tracking-wider text-[#7A6A50] dark:text-[#B8A77F] mb-1 block">{label}</label>
+                <label className="text-xs uppercase tracking-wider text-[var(--muted)] dark:text-[var(--muted)] mb-1 block">
+                  {label}
+                </label>
                 <input
                   type={type || 'text'}
                   value={(tags[key] as string) || ''}
                   onChange={(e) => setTags((prev) => ({ ...prev, [key]: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-sm text-[#1A1208] dark:text-[#FFF8ED] focus:outline-none focus:border-orange-400"
+                  className="w-full px-3 py-2 rounded-xl bg-surface-2 border border-line text-sm text-[var(--fg)] dark:text-[var(--fg)] focus:outline-none focus:border-indigo-400"
                 />
               </div>
             ))}
           </div>
           <div>
-            <label className="text-xs uppercase tracking-wider text-[#7A6A50] dark:text-[#B8A77F] mb-1 block">Cover Art (optional)</label>
-            <input type="file" accept="image/*" onChange={(e) => setCoverFile(e.target.files?.[0] || null)} className="text-sm text-[#7A6A50] dark:text-[#B8A77F]" />
+            <label className="text-xs uppercase tracking-wider text-[var(--muted)] dark:text-[var(--muted)] mb-1 block">
+              Cover Art (optional)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
+              className="text-sm text-[var(--muted)] dark:text-[var(--muted)]"
+            />
           </div>
-          <button onClick={handleSave} className="px-6 py-2.5 rounded-xl font-medium text-sm text-white" style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}>
+          <button
+            type="button"
+            onClick={handleSave}
+            className="px-6 py-2.5 rounded-xl font-medium text-sm text-white"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+          >
             Save Tags
           </button>
         </div>
       )}
       {saving && (
         <div className="flex items-center justify-center py-10">
-          <div className="w-8 h-8 rounded-full border-2 border-orange-400 border-t-transparent animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin" />
         </div>
       )}
       {resultBlob && (
         <GlassCard intensity="medium" className="p-5 flex items-center justify-between gap-4">
-          <p className="font-medium text-[#1A1208] dark:text-[#FFF8ED]">Tags updated!</p>
-          <a href={URL.createObjectURL(resultBlob)} download={file?.name} className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm text-white" style={{ background: 'linear-gradient(135deg, #FF8C00, #FFD700)' }}>
+          <p className="font-medium text-[var(--fg)] dark:text-[var(--fg)]">Tags updated!</p>
+          <a
+            href={URL.createObjectURL(resultBlob)}
+            download={file?.name}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm text-white"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
+          >
             <Download size={16} /> Download
           </a>
         </GlassCard>

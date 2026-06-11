@@ -1,6 +1,6 @@
-import type { OnProgress, ToolResult } from '../types'
 import { decodeFile } from '../decode'
 import { encodeAudioBuffer } from '../encode'
+import type { OnProgress, ToolResult } from '../types'
 
 export async function runReverse(
   file: File,
@@ -9,7 +9,9 @@ export async function runReverse(
   signal?: AbortSignal
 ): Promise<ToolResult> {
   onProgress({ percent: 5, step: 'decoding' })
-  const buffer = await decodeFile(file, (pct) => onProgress({ percent: pct * 0.4, step: 'decoding' }))
+  const buffer = await decodeFile(file, (pct) =>
+    onProgress({ percent: pct * 0.4, step: 'decoding' })
+  )
   if (signal?.aborted) throw new Error('ABORTED')
 
   onProgress({ percent: 45, step: 'processing' })
@@ -35,5 +37,12 @@ export async function runReverse(
     onProgress({ percent: 70 + p.percent * 0.3, step: 'encoding' })
   )
   const outName = file.name.replace(/.[^.]+$/, '-reversed.mp3')
-  return { blob, name: outName, size: blob.size, duration: rendered.duration, mimeType: 'audio/mpeg', format: 'MP3' }
+  return {
+    blob,
+    name: outName,
+    size: blob.size,
+    duration: rendered.duration,
+    mimeType: 'audio/mpeg',
+    format: 'MP3',
+  }
 }
