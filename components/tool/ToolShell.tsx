@@ -30,7 +30,7 @@ export function ToolShell({ tool, children, description }: ToolShellProps) {
   const related = getRelatedTools(tool, 4)
 
   return (
-    <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 sm:px-6 md:py-8">
+    <div className="flex gap-6 py-6 md:py-8">
       <DesktopSidebar />
 
       <div className="flex min-w-0 flex-1 flex-col gap-6">

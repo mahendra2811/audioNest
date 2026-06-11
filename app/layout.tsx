@@ -72,7 +72,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Desktop sticky header */}
           <Header />
           {/* Page content */}
-          <main id="main-content" className="pb-16 md:pb-0">
+          <main
+            id="main-content"
+            className="mx-auto w-full justify-center  max-w-7xl px-4 pb-16 sm:px-6 md:pb-0 lg:px-8"
+          >
             {children}
           </main>
           {/* Desktop footer */}

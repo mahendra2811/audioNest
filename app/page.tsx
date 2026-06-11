@@ -4,7 +4,6 @@ import { ComingSoonGrid } from '@/components/home/ComingSoonGrid'
 import { FeaturedGrid } from '@/components/home/FeaturedGrid'
 import { Hero } from '@/components/home/Hero'
 import { TrustStrip } from '@/components/home/TrustStrip'
-import { Container } from '@/components/ui/Container'
 
 export const metadata: Metadata = {
   title: 'AudioNest — Every audio tool. Right in your browser.',
@@ -16,14 +15,12 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Container size="wide" className="pb-20">
-        <TrustStrip />
-        <div className="mt-16 flex flex-col gap-20">
-          <FeaturedGrid />
-          <CategorySection />
-          <ComingSoonGrid />
-        </div>
-      </Container>
+      <TrustStrip />
+      <div className="mt-16 flex flex-col gap-20 pb-20">
+        <FeaturedGrid />
+        <CategorySection />
+        <ComingSoonGrid />
+      </div>
     </>
   )
 }

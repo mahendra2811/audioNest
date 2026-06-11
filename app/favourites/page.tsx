@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { ToolCard } from '@/components/home/ToolCard'
 import { buttonVariants } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { Container } from '@/components/ui/Container'
 import type { Tool } from '@/lib/config/tools'
 import { getToolBySlug } from '@/lib/config/tools'
 import { useFavourites } from '@/lib/store/favourites'
@@ -14,7 +13,7 @@ export default function FavouritesPage() {
   const tools = favourites.map(getToolBySlug).filter(Boolean) as Tool[]
 
   return (
-    <Container size="wide" className="py-10">
+    <div className="py-10">
       <h1 className="mb-8 text-3xl font-bold tracking-tight text-fg">Favourites</h1>
 
       {tools.length === 0 ? (
@@ -36,6 +35,6 @@ export default function FavouritesPage() {
           ))}
         </div>
       )}
-    </Container>
+    </div>
   )
 }

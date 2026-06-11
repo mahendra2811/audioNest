@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { ToolCard } from '@/components/home/ToolCard'
-import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/Section'
 import { CATEGORIES, liveTools, soonTools } from '@/lib/config/tools'
 
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ToolsPage() {
   return (
-    <Container size="wide" className="py-10">
+    <div className="py-10">
       <SectionHeading
         title="All audio tools"
         subtitle={`${liveTools.length} free tools — 100% private, no upload, works offline.`}
@@ -49,6 +48,6 @@ export default function ToolsPage() {
           </section>
         )}
       </div>
-    </Container>
+    </div>
   )
 }

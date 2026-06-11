@@ -18,8 +18,7 @@ export function FeaturedGrid() {
       <motion.div
         className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4"
         initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         {displayed.map((tool) => (
