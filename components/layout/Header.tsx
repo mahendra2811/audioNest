@@ -16,13 +16,13 @@ export function Header() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 hidden border-b border-line bg-bg/80 backdrop-blur-xl md:block">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-8 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 block border-b border-line bg-bg/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-8 md:h-16 px-4 sm:px-6 lg:px-8">
         <Link href="/" aria-label="AudioNest home" className="rounded-xl">
           <Wordmark size={28} />
         </Link>
 
-        <nav aria-label="Main navigation">
+        <nav aria-label="Main navigation" className="hidden md:block">
           <ul className="flex items-center gap-1">
             {navLinks.map(({ href, label }) => {
               const active = pathname === href || pathname.startsWith(`${href}/`)
