@@ -9,6 +9,7 @@
 Build **AudioNest** — a mobile-first, **100% client-side** browser hub of audio tools. A user picks a tool, drops in a file, it is processed **entirely on their device** (nothing uploaded), and they download the result. The signature look is **Apple-style Liquid Glass** over a living orange-gold gradient.
 
 **Prime directives:**
+
 - **100% on-device.** No uploads, no backend, no accounts, no sign-up, no watermark, free. Files never leave the browser. This is the product's core promise and must be true and stated everywhere.
 - **Honest copy.** Never claim "lossless" where a lossy step occurs (e.g. converting WAV→MP3); label lossy operations plainly.
 - **24 tools ship in v1.** 4 more are "Coming soon" tiles (scaffold only — see §21).
@@ -26,6 +27,7 @@ Build **AudioNest** — a mobile-first, **100% client-side** browser hub of audi
 - **react-dropzone** — file input.
 
 **Audio engine libraries:**
+
 - **Web Audio API** (native) — `AudioContext`, `OfflineAudioContext`, `GainNode`, `BiquadFilterNode`, `ConvolverNode`, `AnalyserNode`, `AudioWorklet`.
 - **@ffmpeg/ffmpeg** + **@ffmpeg/core** (ffmpeg.wasm, **single-threaded self-hosted core**) — conversion, export, filters, video. Lazy-load on first use.
 - **wavesurfer.js** (v7) — waveform display + Regions plugin.
@@ -37,6 +39,7 @@ Build **AudioNest** — a mobile-first, **100% client-side** browser hub of audi
 - **jszip** — bundle multi-file outputs (splitter).
 
 **Infra/ops:**
+
 - **@next/third-parties** (GA4 + GTM), **next-sitemap**, **Serwist** (PWA), **@sentry/nextjs** (env-gated).
 - **Biome** (lint+format), **Husky + lint-staged**, **Vitest** + **React Testing Library**.
 - Deploy: **Vercel** + **Cloudflare** CDN. Set **COOP/COEP headers** (`Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Embedder-Policy: require-corp`) so SharedArrayBuffer/AudioWorklet/ffmpeg.wasm work. If a third-party script needs it, use `credentialless` for COEP.
@@ -57,6 +60,7 @@ Every card and panel is a slab of real refractive glass floating over a living o
 6. **SHADOW** — soft, large, **warm orange-cast** drop shadow (not gray) so the slab clearly floats.
 
 **Depth & motion (physically 3D):**
+
 - **Background:** 3–4 large soft orange/gold blobs drifting and morphing slowly, heavily blurred — this is what the glass refracts; keep it alive but calm. Add ~4% film grain to kill banding.
 - **Parallax:** blobs (far plane), glass slabs (mid plane), foreground content/icons (near plane) move at different speeds on scroll and subtly on pointer move.
 - **Tilt:** glass cards tilt toward the cursor (max 6°). As a card tilts, the specular highlight slides across the surface and the refraction shifts (glass catching a moving light). Spring physics.
@@ -64,12 +68,14 @@ Every card and panel is a slab of real refractive glass floating over a living o
 - **Active/hovered featured card:** a slowly rotating gradient border ring.
 
 **Performance rules (NON-NEGOTIABLE):**
+
 - ALL animation uses **only `transform`/`opacity`** (GPU-composited), never layout properties.
 - `prefers-reduced-motion`: freeze blob drift, tilt, parallax, and refraction animation — glass stays static.
 - **Mobile:** reduce displacement `scale` and blur radius, drop pointer-tilt (refraction static) — performance first.
 - **While any tool is actively processing** (ffmpeg.wasm/WebCodecs/Worklet running): **freeze the refraction animation and blob drift, drop to a cheaper static blur**, then resume when done. Expose a global `useProcessingState` (Zustand) that the background/glass components subscribe to.
 
 **Required design components:**
+
 - `<GlassFilter />` — reusable SVG `<defs>` with the turbulence/displacement filters + chromatic offsets; mounted once in root layout. Provide filter IDs the glass components reference.
 - `<GlassPanel />` / `<GlassCard />` — implements all 6 layers; props: `intensity` (`heavy`|`medium`|`light`), `tilt` (bool), `interactive` (bool, adds hover lift). Uses Framer Motion for tilt/hover.
 - `<BlobBackground />` — animated orange/gold blobs + grain; subscribes to reduced-motion + processing state to freeze.
@@ -109,6 +115,7 @@ A gradient badge with a white audio-waveform mark.
   </g>
 </svg>
 ```
+
 Wordmark: badge + "Audio" (text) + "Nest" (`.text-brand`). Generate favicon, apple-touch-icon, and PWA icons (192/512 + maskable) from this badge.
 
 ---
@@ -196,7 +203,7 @@ audionest/
 ```
 NEXT_PUBLIC_SITE_NAME=AudioNest
 NEXT_PUBLIC_SITE_URL=https://audionest.app
-NEXT_PUBLIC_CONTACT_EMAIL=hello@audionest.app
+NEXT_PUBLIC_CONTACT_EMAIL=mahendrapuniya92@gmail.com
 
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
 NEXT_PUBLIC_GTM_ID=
@@ -217,16 +224,25 @@ NEXT_PUBLIC_SENTRY_DSN=
 
 ```ts
 type Tool = {
-  slug: string;            // url + folder name
-  name: string;            // "Audio Cutter"
-  benefit: string;         // one-line card text
-  icon: string;            // lucide icon name
-  category: 'cut' | 'convert' | 'volume' | 'clean' | 'effects' | 'channels' | 'analyze' | 'metadata' | 'create';
-  featured: boolean;       // appears on home featured grid (the 8)
-  status: 'live' | 'soon';
-  engine: 'webaudio' | 'ffmpeg' | 'mixed';
-  accepts: string[];       // input mime/ext groups
-  output: 'mp3' | 'zip' | 'mp4' | 'display' | 'same'; // display = analysis only, no download
+  slug: string; // url + folder name
+  name: string; // "Audio Cutter"
+  benefit: string; // one-line card text
+  icon: string; // lucide icon name
+  category:
+    | "cut"
+    | "convert"
+    | "volume"
+    | "clean"
+    | "effects"
+    | "channels"
+    | "analyze"
+    | "metadata"
+    | "create";
+  featured: boolean; // appears on home featured grid (the 8)
+  status: "live" | "soon";
+  engine: "webaudio" | "ffmpeg" | "mixed";
+  accepts: string[]; // input mime/ext groups
+  output: "mp3" | "zip" | "mp4" | "display" | "same"; // display = analysis only, no download
   seo: { title: string; description: string };
 };
 ```
@@ -243,6 +259,7 @@ Two engine paths, both invoked through a Web Worker so the UI (and glass animati
 - **Engine B — ffmpeg.wasm:** `File → ffmpeg.writeFile → ffmpeg.exec([...]) → ffmpeg.readFile → Blob`. Used by: convert, video-to-audio, photo→video, splitter, normalize (loudnorm), compress, silence remove, stereo↔mono, strip-metadata.
 
 Shared rules:
+
 - **Decode guards:** very large/long files can exhaust memory. For waveform display of big files use **pre-decoded peaks** (don't fully decode for display). Enforce input limits: **500 MB / 2 hours** — reject with a clear toast before processing.
 - **Progress:** real progress from ffmpeg (`on('progress')`) or from frame/sample counts; never fake. Drive `ProgressRing`. Support cancellation (AbortSignal → terminate worker / `ffmpeg.terminate()`), and on cancel free buffers and reset the processing flag.
 - **Processing flag:** wrap every tool run so it sets `processing.start()` / `processing.end()` (freezes background + glass animation per §3).
@@ -256,6 +273,7 @@ Shared rules:
 Format: **Engine · Libraries · Input · Output · Flow · States · Edge cases.** Every tool page is built from the shared `ToolShell` (§13).
 
 ### Cut & Edit
+
 **1. Audio Cutter** — slug `audio-cutter` · Engine mixed · `wavesurfer.js`(+Regions), `@ffmpeg/ffmpeg` · In: audio · Out: mp3.
 Flow: upload → render waveform → drag region handles (start/end) → optional Fade In/Fade Out toggles → "Cut" slices AudioBuffer at timestamps, applies GainNode fade ramps → encode → download. States: skeleton waveform while decoding → interactive waveform with orange region + handles → processing ring → before/after player + download. Edge: >100 MB use pre-decoded peaks; warn on >2 h.
 
@@ -272,6 +290,7 @@ Flow: upload → waveform highlights detected silent regions → threshold slide
 Flow: upload → "Reverse" reverses each channel's Float32Array → preview → encode → download. States: instant for short files (no spinner); ring for long.
 
 ### Convert
+
 **6. Audio Converter** — slug `audio-converter` · Engine ffmpeg · `@ffmpeg/ffmpeg` · In: any audio · Out: mp3/wav/flac/aac/ogg/m4a/opus.
 Flow: upload (+ detected format) → pick target format (button grid, active highlighted) + optional bitrate slider for lossy → convert → download. Edge: WAV/FLAC→MP3 shows a "this step is lossy" note; unsupported input → ffmpeg decode handles it.
 
@@ -282,6 +301,7 @@ Flow: upload → show video info + grabbed thumbnail (canvas) → pick format �
 Flow: dual dropzones → preview image thumb + audio waveform + duration → ffmpeg `-loop 1 -i img -i audio -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest` (scale image to even dimensions) → video player + download. Use case: lyric/podcast/status videos.
 
 ### Clean & Compress
+
 **9. Noise Remover** — slug `noise-remover` · Engine webaudio (Worklet) · `@sapphi-red/web-noise-suppressor`, `@ffmpeg/ffmpeg`(export) · In: audio · Out: mp3.
 Flow: upload → decode → route through RNNoise `NoiseSuppressionWorkletNode` in OfflineAudioContext → encode cleaned buffer → before/after compare → download. States: upload → "Cleaning noise…" → before/after toggle player + download. Edge: voice-optimized — on music input show toast "Best for voice recordings — results on music may vary."
 
@@ -289,6 +309,7 @@ Flow: upload → decode → route through RNNoise `NoiseSuppressionWorkletNode` 
 Flow: upload (+ current size/bitrate) → target: size slider (live est. "~2.4 MB at 96 kbps") OR bitrate picker (32/64/96/128 kbps) → re-encode → before/after size comparison + download.
 
 ### Volume & Loudness
+
 **11. Volume Booster** — slug `volume-booster` · Engine webaudio · `@ffmpeg/ffmpeg`(export) · In: audio · Out: mp3.
 Flow: upload → waveform + current peak → gain slider (−20 to +20 dB, default 0) with live preview → "Apply" renders via OfflineAudioContext + GainNode → download. (Clamp/limit to avoid clipping; optional soft-limit.)
 
@@ -302,6 +323,7 @@ Flow: upload → preview → bass slider (0 to +12 dB, BiquadFilter lowshelf ~10
 Flow: upload → decode → compute Peak (dBFS), RMS, Integrated LUFS (EBU R128), LRA, True Peak → display with color-coded bar meters (green/amber/red). No download.
 
 ### Effects
+
 **15. Reverb Adder** — slug `reverb-adder` · Engine webaudio · `@ffmpeg/ffmpeg`(export); IR WAVs in `/public/ir` · In: audio · Out: mp3.
 Flow: upload → dry preview → pick preset (Room/Hall/Church/Cave/Studio/Plate) + wet/dry slider → ConvolverNode(IR) + GainNode wet/dry in OfflineAudioContext → live preview → "Apply" → download.
 
@@ -312,6 +334,7 @@ Flow: upload → speed slider (0.25×–4×) with **maintain-pitch on by default
 Flow: same as Speed Changer but pitch slider in semitones (−12 to +12), tempo fixed at 1×.
 
 ### Channels
+
 **18. Stereo to Mono** — slug `stereo-to-mono` · Engine ffmpeg · `@ffmpeg/ffmpeg` · In: stereo audio · Out: mp3.
 Flow: upload → one-click → ffmpeg `-ac 1` (or `pan=mono|c0=.5*c0+.5*c1`) → show before/after size (~half) → download. No settings.
 
@@ -319,10 +342,12 @@ Flow: upload → one-click → ffmpeg `-ac 1` (or `pan=mono|c0=.5*c0+.5*c1`) →
 Flow: upload → one-click → ffmpeg `-ac 2` (duplicate channel) → download.
 
 ### Analyze
+
 **20. BPM Detector** — slug `bpm-detector` · Engine webaudio · `web-audio-beat-detector` · In: audio · Out: display.
 Flow: upload → decode → `analyze(audioBuffer)` → large BPM display + note. Edge: ambient/classical → "Beat not detected clearly." No download.
 
 ### Metadata
+
 **21. ID3 Tag Editor** — slug `id3-tag-editor` · Engine n/a · `music-metadata`(read), `browser-id3-writer`(write) · In: mp3 · Out: mp3.
 Flow: upload → instantly read + prefill form (Title, Artist, Album, Year, Genre, Track #, Comment) + current cover art (option to upload new image) → edit → "Save Tags" writes ID3v2 into the file buffer → download updated MP3.
 
@@ -330,6 +355,7 @@ Flow: upload → instantly read + prefill form (Title, Artist, Album, Year, Genr
 Flow: upload → show all current metadata; **highlight GPS/location and device info if present** (the privacy hook) → "Remove All Metadata" → ffmpeg `-map_metadata -1 -c:a copy` → "Removed N fields" → download clean file.
 
 ### Create
+
 **23. Loop Maker** — slug `loop-maker` · Engine webaudio · `@ffmpeg/ffmpeg`(export), `wavesurfer.js` · In: short audio · Out: mp3.
 Flow: upload → waveform + duration → loops slider (2–50×) + optional gap (0–3 s) → "Preview" plays loop → "Export" renders N concatenated copies via OfflineAudioContext → show output duration ("10 s × 10 = 1m40s") → download.
 
@@ -371,8 +397,8 @@ Use real copy (warm, honest); store all strings in `lib/strings.ts`. Each page: 
 - **`/tools`** (desktop sidebar + grid of all tools by category; mobile = Tools tab).
 - **`/how-it-works`:** how on-device processing works (upload → process in your browser → download), why it's private (files never leave the device), honest note that converting between formats can be lossy, and that AudioNest is free with no watermark.
 - **`/about`:** AudioNest is a free, privacy-first audio toolkit that runs entirely in your browser, with more tools coming.
-- **`/privacy-policy`** *(template — README must tell the owner to have it reviewed):* emphasize **no audio leaves the device / nothing uploaded / no accounts**; analytics & cookies only **if enabled**; contact-form data only **if Formspree enabled**; write conditionally so it's accurate whether or not analytics/ads are on.
-- **`/terms`** *(template — review before relying on it):* free service, as-is/no warranty, acceptable use, IP, liability limit, changes, contact.
+- **`/privacy-policy`** _(template — README must tell the owner to have it reviewed):_ emphasize **no audio leaves the device / nothing uploaded / no accounts**; analytics & cookies only **if enabled**; contact-form data only **if Formspree enabled**; write conditionally so it's accurate whether or not analytics/ads are on.
+- **`/terms`** _(template — review before relying on it):_ free service, as-is/no warranty, acceptable use, IP, liability limit, changes, contact.
 - **`/contact`:** form (name/email/message). If `NEXT_PUBLIC_FORMSPREE_ID` set → fetch POST to Formspree; else render a `mailto:` link. Result via Sonner. (No `<form>` server action needed.)
 - **`not-found` / `error`:** branded, gradient accent, link home.
 
@@ -410,6 +436,7 @@ WCAG-AA contrast both themes; full keyboard nav; visible focus rings; aria on dr
 │  └─ run-checks.md    # slash command: bun run build + biome + vitest, report failures
 └─ settings.json       # Claude Code project settings (permissions, formatting)
 ```
+
 `CLAUDE.md` must let a fresh session continue work without re-reading this whole spec: it summarizes the architecture, the Liquid Glass layer recipe + performance freeze rule, the tool registry contract, and the definition of done.
 
 ---
@@ -447,10 +474,11 @@ Build autonomously and fix until all the above hold.
 ## 21. v1.1 roadmap (DO NOT build — register as `status:'soon'` tiles + leave TODOs)
 
 The registry + ToolShell + worker engine must make these additive:
+
 - **Vocal Remover** & **Stem Splitter** — on-device source separation (Demucs/Spleeter-class ONNX via WebGPU; ~50–200 MB model on first use; show download progress).
 - **Beat Sequencer** — grid + BPM + sound placement, export (Tone.js).
 - **Clip Timeline / Song Builder** — arrange clips on a timeline, export.
 - **Server heavy-tier** — optional native-FFmpeg worker host for 4K/huge/long files that exceed the browser; opt-in upload with explicit privacy notice.
 - **i18n (Hindi)** — all strings already centralized in `lib/strings.ts` for a later drop-in.
 
-*End of specification.*
+_End of specification._

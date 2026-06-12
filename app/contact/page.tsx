@@ -1,45 +1,45 @@
-'use client'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { Button, buttonVariants } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
-import { Container } from '@/components/ui/Container'
-import { Input, Textarea } from '@/components/ui/Field'
+"use client";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button, buttonVariants } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Container } from "@/components/ui/Container";
+import { Input, Textarea } from "@/components/ui/Field";
 
-const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
 
-type Status = 'idle' | 'sending' | 'done' | 'error'
+type Status = "idle" | "sending" | "done" | "error";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<Status>('idle')
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<Status>("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    if (!FORMSPREE_ID) return
-    setStatus('sending')
+    e.preventDefault();
+    if (!FORMSPREE_ID) return;
+    setStatus("sending");
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(form),
-      })
+      });
       if (res.ok) {
-        setStatus('done')
-        toast.success("Message sent! We'll get back to you soon.")
-        setForm({ name: '', email: '', message: '' })
+        setStatus("done");
+        toast.success("Message sent! We'll get back to you soon.");
+        setForm({ name: "", email: "", message: "" });
       } else {
-        setStatus('error')
-        toast.error('Something went wrong. Please try again.')
+        setStatus("error");
+        toast.error("Something went wrong. Please try again.");
       }
     } catch {
-      setStatus('error')
-      toast.error('Network error. Please check your connection.')
+      setStatus("error");
+      toast.error("Network error. Please check your connection.");
     }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   return (
@@ -50,7 +50,7 @@ export default function ContactPage() {
       </p>
 
       <Card className="mx-auto max-w-lg p-6 sm:p-8">
-        {status === 'done' ? (
+        {status === "done" ? (
           <div className="py-8 text-center">
             <div className="mb-4 text-5xl">✉️</div>
             <p className="text-lg font-medium text-fg">
@@ -86,10 +86,10 @@ export default function ContactPage() {
               onChange={handleChange}
               placeholder="Tell us what's on your mind…"
             />
-            <Button type="submit" disabled={status === 'sending'} className="w-full">
-              {status === 'sending' ? 'Sending…' : 'Send message'}
+            <Button type="submit" disabled={status === "sending"} className="w-full">
+              {status === "sending" ? "Sending…" : "Send message"}
             </Button>
-            {status === 'error' && (
+            {status === "error" && (
               <p className="text-center text-sm text-red-500 dark:text-red-400">
                 Something went wrong. Please try again.
               </p>
@@ -98,12 +98,12 @@ export default function ContactPage() {
         ) : (
           <div className="py-8 text-center">
             <p className="mb-6 text-sm text-muted">Reach us directly at:</p>
-            <a href="mailto:hello@audionest.app" className={buttonVariants({ size: 'md' })}>
-              hello@audionest.app
+            <a href="mailto:mahendrapuniya92@gmail.com" className={buttonVariants({ size: "md" })}>
+              mahendrapuniya92@gmail.com
             </a>
           </div>
         )}
       </Card>
     </Container>
-  )
+  );
 }

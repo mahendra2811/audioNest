@@ -23,17 +23,17 @@ AudioNest is a browser-based audio toolkit. It runs **entirely on your device** 
 
 ### 24 tools included
 
-| Category | Tools |
-|---|---|
-| **Cut & Edit** | Audio Cutter, Audio Joiner, Audio Splitter, Silence Remover, Audio Reverser |
-| **Convert** | Audio Converter, Video to Audio, Photo + Audio → Video |
-| **Clean & Compress** | Noise Remover, Audio Compressor, Audio Normalizer |
-| **Volume & Loudness** | Volume Booster, Bass Booster, Loudness Meter |
-| **Effects** | Reverb Adder, Speed Changer, Pitch Shifter |
-| **Channels** | Stereo to Mono, Mono to Stereo |
-| **Analyze** | BPM Detector, Audio Info |
-| **Metadata** | ID3 Tag Editor, Metadata Remover |
-| **Create** | Loop Maker |
+| Category              | Tools                                                                       |
+| --------------------- | --------------------------------------------------------------------------- |
+| **Cut & Edit**        | Audio Cutter, Audio Joiner, Audio Splitter, Silence Remover, Audio Reverser |
+| **Convert**           | Audio Converter, Video to Audio, Photo + Audio → Video                      |
+| **Clean & Compress**  | Noise Remover, Audio Compressor, Audio Normalizer                           |
+| **Volume & Loudness** | Volume Booster, Bass Booster, Loudness Meter                                |
+| **Effects**           | Reverb Adder, Speed Changer, Pitch Shifter                                  |
+| **Channels**          | Stereo to Mono, Mono to Stereo                                              |
+| **Analyze**           | BPM Detector, Audio Info                                                    |
+| **Metadata**          | ID3 Tag Editor, Metadata Remover                                            |
+| **Create**            | Loop Maker                                                                  |
 
 > **Coming soon:** Vocal Remover, Stem Splitter, Beat Sequencer, Clip Timeline
 
@@ -89,17 +89,17 @@ Copy the example file to get started:
 cp .env.example .env.local
 ```
 
-| Variable | Default | Description |
-|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://audionest.app` | Canonical URL for SEO, OG images, sitemap |
-| `NEXT_PUBLIC_SITE_NAME` | `AudioNest` | Site name in metadata |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | `hello@audionest.app` | Email shown on contact page (mailto fallback) |
-| `NEXT_PUBLIC_FORMSPREE_ID` | _(none)_ | [Formspree](https://formspree.io) form ID — enables the contact form |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | _(none)_ | Google Analytics 4 measurement ID |
-| `NEXT_PUBLIC_GTM_ID` | _(none)_ | Google Tag Manager container ID |
-| `NEXT_PUBLIC_ADS_ENABLED` | `false` | Set to `true` to show ads (also needs `ADSENSE_CLIENT_ID`) |
-| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | _(none)_ | Google AdSense publisher ID (e.g. `ca-pub-XXXXXXXX`) |
-| `NEXT_PUBLIC_GSC_VERIFICATION` | _(none)_ | Google Search Console `<meta>` verification token |
+| Variable                        | Default                      | Description                                                          |
+| ------------------------------- | ---------------------------- | -------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`          | `https://audionest.app`      | Canonical URL for SEO, OG images, sitemap                            |
+| `NEXT_PUBLIC_SITE_NAME`         | `AudioNest`                  | Site name in metadata                                                |
+| `NEXT_PUBLIC_CONTACT_EMAIL`     | `mahendrapuniya92@gmail.com` | Email shown on contact page (mailto fallback)                        |
+| `NEXT_PUBLIC_FORMSPREE_ID`      | _(none)_                     | [Formspree](https://formspree.io) form ID — enables the contact form |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | _(none)_                     | Google Analytics 4 measurement ID                                    |
+| `NEXT_PUBLIC_GTM_ID`            | _(none)_                     | Google Tag Manager container ID                                      |
+| `NEXT_PUBLIC_ADS_ENABLED`       | `false`                      | Set to `true` to show ads (also needs `ADSENSE_CLIENT_ID`)           |
+| `NEXT_PUBLIC_ADSENSE_CLIENT_ID` | _(none)_                     | Google AdSense publisher ID (e.g. `ca-pub-XXXXXXXX`)                 |
+| `NEXT_PUBLIC_GSC_VERIFICATION`  | _(none)_                     | Google Search Console `<meta>` verification token                    |
 
 ---
 
@@ -221,22 +221,22 @@ Six rendering layers stacked in order:
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [Next.js 16](https://nextjs.org) — App Router, Turbopack |
-| Language | TypeScript (strict) |
-| Styling | [Tailwind CSS v4](https://tailwindcss.com) with `@theme` tokens |
-| Animation | [Framer Motion](https://framer.com/motion) |
-| Audio processing | [ffmpeg.wasm](https://ffmpegwasm.netlify.app) (`@ffmpeg/ffmpeg` + `@ffmpeg/core`) |
-| Audio analysis | Web Audio API (`AudioContext`, `OfflineAudioContext`) |
-| State | [Zustand](https://zustand-demo.pmnd.rs) |
-| UI primitives | [shadcn/ui](https://ui.shadcn.com) + [Radix UI](https://radix-ui.com) |
-| Toasts | [Sonner](https://sonner.emilkowal.ski) |
-| Metadata reading | [music-metadata](https://github.com/borewit/music-metadata-browser) |
-| ID3 writing | [browser-id3-writer](https://github.com/egoroof/browser-id3-writer) |
-| BPM detection | [web-audio-beat-detector](https://github.com/chrisguttandin/web-audio-beat-detector) |
-| Testing | [Vitest](https://vitest.dev) |
-| Package manager | [Bun](https://bun.sh) |
+| Layer            | Technology                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| Framework        | [Next.js 16](https://nextjs.org) — App Router, Turbopack                             |
+| Language         | TypeScript (strict)                                                                  |
+| Styling          | [Tailwind CSS v4](https://tailwindcss.com) with `@theme` tokens                      |
+| Animation        | [Framer Motion](https://framer.com/motion)                                           |
+| Audio processing | [ffmpeg.wasm](https://ffmpegwasm.netlify.app) (`@ffmpeg/ffmpeg` + `@ffmpeg/core`)    |
+| Audio analysis   | Web Audio API (`AudioContext`, `OfflineAudioContext`)                                |
+| State            | [Zustand](https://zustand-demo.pmnd.rs)                                              |
+| UI primitives    | [shadcn/ui](https://ui.shadcn.com) + [Radix UI](https://radix-ui.com)                |
+| Toasts           | [Sonner](https://sonner.emilkowal.ski)                                               |
+| Metadata reading | [music-metadata](https://github.com/borewit/music-metadata-browser)                  |
+| ID3 writing      | [browser-id3-writer](https://github.com/egoroof/browser-id3-writer)                  |
+| BPM detection    | [web-audio-beat-detector](https://github.com/chrisguttandin/web-audio-beat-detector) |
+| Testing          | [Vitest](https://vitest.dev)                                                         |
+| Package manager  | [Bun](https://bun.sh)                                                                |
 
 ---
 
