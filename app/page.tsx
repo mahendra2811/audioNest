@@ -3,6 +3,7 @@ import { CategorySection } from '@/components/home/CategorySection'
 import { ComingSoonGrid } from '@/components/home/ComingSoonGrid'
 import { FeaturedGrid } from '@/components/home/FeaturedGrid'
 import { Hero } from '@/components/home/Hero'
+import { HomeFaq } from '@/components/home/HomeFaq'
 import { TrustStrip } from '@/components/home/TrustStrip'
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function HomePage() {
         <FeaturedGrid />
         <CategorySection />
         <ComingSoonGrid />
+        <HomeFaq />
       </div>
     </>
   )

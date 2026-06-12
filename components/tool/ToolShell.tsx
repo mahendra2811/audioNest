@@ -1,15 +1,19 @@
 'use client'
 import type { LucideIcon } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
-import { ChevronRight, Heart } from 'lucide-react'
+import { BookOpen, ChevronRight, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { AdSlot } from '@/components/ads/AdSlot'
 import { ToolCard } from '@/components/home/ToolCard'
 import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
+import { Accordion } from '@/components/ui/Accordion'
 import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
+import { getBlogsByTool } from '@/lib/config/blogs'
+import { getToolFaqs } from '@/lib/config/faqs'
 import type { Tool } from '@/lib/config/tools'
 import { getRelatedTools } from '@/lib/config/tools'
+import { SITE_NAME, toolUrl } from '@/lib/site'
 import { useFavourites } from '@/lib/store/favourites'
 import { cn } from '@/lib/utils'
 
@@ -107,6 +111,55 @@ export function ToolShell({ tool, children, description }: ToolShellProps) {
             </div>
           </div>
         )}
+
+        {/* FAQ / Accordion */}
+        {(() => {
+          const faqs = getToolFaqs(tool.slug)
+          return faqs.length > 0 ? (
+            <div>
+              <h2 className="mb-3 text-base font-semibold text-fg">
+                Frequently Asked Questions — {tool.name}
+              </h2>
+              <Card inset className="px-5 py-1">
+                <Accordion items={faqs} allowMultiple />
+              </Card>
+              <p className="mt-2 text-xs text-muted">
+                Powered by{' '}
+                <Link href={toolUrl(tool.slug)} className="text-primary hover:underline">
+                  {SITE_NAME} {tool.name}
+                </Link>{' '}
+                — free, private, browser-based.
+              </p>
+            </div>
+          ) : null
+        })()}
+
+        {/* Related blog articles */}
+        {(() => {
+          const blogs = getBlogsByTool(tool.slug)
+          return blogs.length > 0 ? (
+            <div>
+              <div className="mb-3 flex items-center gap-2">
+                <BookOpen size={15} className="text-muted" />
+                <h2 className="text-base font-semibold text-fg">{tool.name} Guides</h2>
+              </div>
+              <div className="flex flex-col gap-2">
+                {blogs.map((blog) => (
+                  <Link
+                    key={blog.slug}
+                    href={`/blog/${blog.slug}`}
+                    className="group flex items-start justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-primary/30 hover:bg-primary/5"
+                  >
+                    <span className="text-sm font-medium text-fg group-hover:text-primary">
+                      {blog.title}
+                    </span>
+                    <span className="mt-0.5 shrink-0 text-xs text-muted">{blog.readTime}m</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null
+        })()}
 
         <AdSlot slot="tool-bottom" />
       </div>
