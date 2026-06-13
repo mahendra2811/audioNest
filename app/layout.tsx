@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
+import { Analytics } from '@/components/analytics/Analytics'
 import { BlobBackground } from '@/components/glass/BlobBackground'
 import { GlassFilter } from '@/components/glass/GlassFilter'
 import { AppSplash } from '@/components/layout/AppSplash'
@@ -85,6 +86,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Toast notifications */}
           <Toaster position="top-center" richColors />
         </ThemeProvider>
+        {/* Google Analytics / Tag Manager — gated on env vars */}
+        <Analytics />
       </body>
     </html>
   )
